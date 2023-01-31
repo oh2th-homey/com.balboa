@@ -1,11 +1,11 @@
 {
   "title": {
-    "en": "Heater mode is ready",
-    "nl": "Verwarmingsmodus is gereed"
+    "en": "Heater is on",
+    "nl": "Verwarming is aan"
   },
   "titleFormatted": {
-    "en": "Heater mode is !{{ready|rest}}",
-    "nl": "Verwarmingsmodus is !{{gereed|in rust}}"
+    "en": "Heater is !{{on|off}}",
+    "nl": "Verwarming is !{{aan|uit}}"
   },
   "args": [
     {
