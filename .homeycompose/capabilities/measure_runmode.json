@@ -4,8 +4,9 @@
     "en": "Is ready",
     "nl": "Is beschikbaar"
   },
+  "deprecated": true,
   "getable": true,
   "setable": false,
-  "uiComponent": "sensor",
+  "uiComponent": null,
   "icon": "assets/icons/lightning-charge.svg"
 }

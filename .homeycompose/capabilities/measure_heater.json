@@ -1,0 +1,12 @@
+{
+    "type": "boolean",
+    "title": {
+      "en": "Heater Active",
+      "nl": "Verwarming actief"
+    },
+    "getable": true,
+    "setable": false,
+    "uiComponent": "sensor",
+    "icon": "assets/icons/thermometer-sun.svg"
+  }
+  

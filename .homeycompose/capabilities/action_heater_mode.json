@@ -1,8 +1,8 @@
 {
   "type": "boolean",
   "title": {
-    "en": "Heater",
-    "nl": "Verwarming"
+    "en": "Heatermode rest/ready",
+    "nl": "Verwarmingsmodus rust/beschikbaar"
   },
   "getable": true,
   "setable": true,

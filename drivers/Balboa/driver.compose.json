@@ -14,6 +14,7 @@
         "measure_online",
         "measure_runmode",
         "measure_temperature_range",
+        "measure_heater",
         "measure_heater_mode",
         "action_light_state",
         "action_heater_mode",

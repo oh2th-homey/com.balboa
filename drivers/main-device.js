@@ -1,6 +1,8 @@
 const Homey = require('homey');
 const ControlMySpa = require('../lib/balboa');
 const { sleep, decrypt, encrypt, toCelsius, toFahrenheit } = require('../lib/helpers');
+const mock = require('../lib/mock');
+const mockEnabled = false; // for debugging without API access
 
 module.exports = class mainDevice extends Homey.Device {
     async onInit() {
@@ -70,18 +72,6 @@ module.exports = class mainDevice extends Homey.Device {
             this.homey.app.log(`[Device] ${this.getName()} - setControlMySpaClient - error =>`, error);
         }
     }
-
-    // async resetControlMySpaClient() {
-    //     this.setUnavailable(`Re-Connecting to ${this.getName()}`);
-
-    //     if (this.onPollInterval) {
-    //         this.clearIntervals();
-    //     }
-
-    //     this._controlMySpaClient = undefined;
-
-    //     this.setControlMySpaClient()
-    // }
 
     // ------------- CapabilityListeners -------------
     async setCapabilityListeners() {
@@ -216,7 +206,12 @@ module.exports = class mainDevice extends Homey.Device {
 
         try {
             const settings = this.getSettings();
-            const deviceInfo = deviceInfoOverride ? deviceInfoOverride : await this._controlMySpaClient.getSpa();
+            let deviceInfo = deviceInfoOverride ? deviceInfoOverride : await this._controlMySpaClient.getSpa();
+
+            if (mockEnabled) {
+                deviceInfo = mock;
+            }
+
             const { currentState } = deviceInfo;
             let { desiredTemp, targetDesiredTemp, currentTemp, panelLock, heaterMode, components, runMode, online, tempRange, setupParams, hour, minute, timeNotSet, military } = currentState;
 
@@ -241,21 +236,22 @@ module.exports = class mainDevice extends Homey.Device {
 
             // ------------ Get values --------------
             const light = await this.getComponentValue('LIGHT', components);
-            const heaterReady = (heaterMode === 'READY');
+            const heaterOnOff = await this.getComponentValue('HEATER', components);
             const tempRangeHigh = (tempRange === 'HIGH');
             const tempRangeLow = (tempRange === 'LOW');
-            const runModeReady = (runMode === 'Ready');
+            const heaterReady = (heaterMode === 'READY');
+            const runModeReady = (runMode === 'Ready'); // deprecated
 
             if (tempRangeHigh) {
                 this.setCapabilityOptions('target_temperature', {
-                    "min": toCelsius(setupParams.highRangeLow),
-                    "max": toCelsius(setupParams.highRangeHigh)
-                })
+                    min: toCelsius(setupParams.highRangeLow),
+                    max: toCelsius(setupParams.highRangeHigh)
+                });
             } else if (tempRangeLow) {
                 this.setCapabilityOptions('target_temperature', {
-                    "min": toCelsius(setupParams.lowRangeLow),
-                    "max": toCelsius(setupParams.lowRangeHigh)
-                })
+                    min: toCelsius(setupParams.lowRangeLow),
+                    max: toCelsius(setupParams.lowRangeHigh)
+                });
             }
 
             if (pump0) {
@@ -292,6 +288,7 @@ module.exports = class mainDevice extends Homey.Device {
             await this.setValue('measure_heater_mode', heaterMode, check);
             await this.setValue('measure_online', online, check);
             await this.setValue('measure_runmode', runModeReady, check);
+            await this.setValue('measure_heater', heaterOnOff, check);
 
             if (currentTemp) await this.setValue('measure_temperature', toCelsius(currentTemp), check, 10, settings.round_temp);
             // If desiredTemp is available, compare it to targetDesiredTemp. There should be 0.4 difference for valid value.
@@ -316,7 +313,6 @@ module.exports = class mainDevice extends Homey.Device {
             const myTime = timeNow.toLocaleString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: myTZ });
             const myDate = timeNow.toLocaleString('en-US', { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: myTZ });
             const myTimeMinutes = Number(myTime.split(':')[0]) * 60 + Number(myTime.split(':')[1]);
-            const spaTimeMinutes = (hour * 60) + minute;
 
             if ((online && settings.clock_sync) && (timeNotSet || military !== settings.clock_24 || (Math.abs(spaTimeMinutes - myTimeMinutes) > 5))) {
                 this.homey.app.log(`[Device] ${this.getName()} - setClock ${myDate} ${myTime} ${myTZ} clock_24=${settings.clock_24}`);
@@ -336,7 +332,7 @@ module.exports = class mainDevice extends Homey.Device {
     async getComponentValue(val, components) {
         const comp = components.find((el, id) => el.componentType === val);
         if (comp) {
-            return comp.value === 'HIGH';
+            return comp.value === 'HIGH' || comp.value === 'ON';
         }
 
         return false;
@@ -348,7 +344,7 @@ module.exports = class mainDevice extends Homey.Device {
         if (this.hasCapability(key)) {
             const newKey = key.replace('.', '_');
             const oldVal = await this.getCapabilityValue(key);
-            const newVal = roundNumber ? Math.round(value) : value
+            const newVal = roundNumber ? Math.round(value) : value;
 
             this.homey.app.log(`[Device] ${this.getName()} - setValue - oldValue => ${key} => `, oldVal, newVal);
 
