@@ -207,6 +207,20 @@
       },
       {
         "title": {
+          "en": "Circulation pump state changed",
+          "nl": "Circulatie pomp status veranderd"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=Balboa"
+          }
+        ],
+        "id": "measure_circulation_pump_state_changed"
+      },
+      {
+        "title": {
           "en": "Heater has changed",
           "nl": "Verwarming is veranderd"
         },
@@ -325,6 +339,27 @@
           "local"
         ],
         "id": "condition_blower_state_2"
+      },
+      {
+        "title": {
+          "en": "Circulation pump status is High",
+          "nl": "Circulatie pomp status is Hoog"
+        },
+        "titleFormatted": {
+          "en": "Circulation pump status is !{{High|Low}}",
+          "nl": "Circulatie pomp status is !{{Hoog|Laag}}"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=Balboa"
+          }
+        ],
+        "platforms": [
+          "local"
+        ],
+        "id": "condition_CIRCULATION_PUMP_state"
       },
       {
         "title": {
@@ -472,6 +507,27 @@
           "local"
         ],
         "id": "condition_RUNMODE"
+      },
+      {
+        "title": {
+          "en": "Temperature range status is High",
+          "nl": "Temperatuur bereik status is Hoog"
+        },
+        "titleFormatted": {
+          "en": "Temperature range status is !{{High|Low}}",
+          "nl": "Temperatuur bereik status is !{{Hoog|Laag}}"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=Balboa"
+          }
+        ],
+        "platforms": [
+          "local"
+        ],
+        "id": "condition_TEMPERATURE_RANGE"
       }
     ],
     "actions": [
@@ -1026,6 +1082,7 @@
         "measure_runmode",
         "measure_temperature_range",
         "measure_heater_mode",
+        "measure_circulation_pump",
         "action_light_state",
         "action_heater_mode",
         "action_update_data",
@@ -1131,6 +1188,33 @@
       "getable": true,
       "setable": true,
       "uiComponent": "button"
+    },
+    "measure_circulation_pump": {
+      "type": "enum",
+      "title": {
+        "en": "Circulation pump",
+        "nl": "Circulatie pomp"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "assets/icons/moisture.svg",
+      "values": [
+        {
+          "id": "LOW",
+          "title": {
+            "en": "LOW",
+            "nl": "LOW"
+          }
+        },
+        {
+          "id": "HIGH",
+          "title": {
+            "en": "HIGH",
+            "nl": "HIGH"
+          }
+        }
+      ]
     },
     "measure_heater_mode": {
       "type": "enum",

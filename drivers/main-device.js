@@ -1,6 +1,8 @@
 const Homey = require('homey');
 const ControlMySpa = require('../lib/balboa');
 const { sleep, decrypt, encrypt, toCelsius, toFahrenheit } = require('../lib/helpers');
+const mock = require('../lib/mock');
+const mockEnabled = false; // for debugging without API access
 
 module.exports = class mainDevice extends Homey.Device {
     async onInit() {
@@ -216,7 +218,12 @@ module.exports = class mainDevice extends Homey.Device {
 
         try {
             const settings = this.getSettings();
-            const deviceInfo = deviceInfoOverride ? deviceInfoOverride : await this._controlMySpaClient.getSpa();
+            let deviceInfo = deviceInfoOverride ? deviceInfoOverride : await this._controlMySpaClient.getSpa();
+
+            if (mockEnabled) {
+                deviceInfo = mock;
+            }
+
             const { currentState } = deviceInfo;
             let { desiredTemp, targetDesiredTemp, currentTemp, panelLock, heaterMode, components, runMode, online, tempRange, setupParams, hour, minute, timeNotSet, military } = currentState;
 
@@ -229,7 +236,8 @@ module.exports = class mainDevice extends Homey.Device {
             const blower0 = await this.getComponent('BLOWER', components, '0');
             const blower1 = await this.getComponent('BLOWER', components, '1');
             const blower2 = await this.getComponent('BLOWER', components, '2');
-
+            const circulationPump = await this.getComponent('CIRCULATION_PUMP', components);
+console.log(circulationPump)
             if (check) {
                 if (pump0) await this.addCapability('action_pump_state');
                 if (pump1) await this.addCapability('action_pump_state.1');
@@ -283,6 +291,10 @@ module.exports = class mainDevice extends Homey.Device {
                 await this.setValue('action_blower_state.2', blower2_val, check);
             }
 
+            if(circulationPump) {
+                await this.setValue('measure_circulation_pump', circulationPump.value, check);
+            }
+
             await this.setValue('action_update_data', false, check);
             await this.setValue('locked', panelLock, check);
             await this.setValue('action_light_state', light, check);
@@ -330,7 +342,11 @@ module.exports = class mainDevice extends Homey.Device {
     }
 
     async getComponent(val, components, index = null) {
-        return components.find((el, id) => el.componentType === val && el.port === index);
+        if(index) {
+            return components.find((el, id) => el.componentType === val && el.port === index);
+        }
+        return components.find((el, id) => el.componentType === val);
+       
     }
 
     async getComponentValue(val, components) {

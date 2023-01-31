@@ -1,0 +1,20 @@
+{
+  "title": {
+    "en": "Circulation pump status is High",
+    "nl": "Circulatie pomp status is Hoog"
+  },
+  "titleFormatted": {
+    "en": "Circulation pump status is !{{High|Low}}",
+    "nl": "Circulatie pomp status is !{{Hoog|Laag}}"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=Balboa"
+    }
+  ],
+  "platforms": [
+    "local"
+  ]
+}
