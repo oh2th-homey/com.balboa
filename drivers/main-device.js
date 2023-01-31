@@ -224,6 +224,7 @@ module.exports = class mainDevice extends Homey.Device {
             const blower0 = await this.getComponent('BLOWER', components, '0');
             const blower1 = await this.getComponent('BLOWER', components, '1');
             const blower2 = await this.getComponent('BLOWER', components, '2');
+            const circulationPump = await this.getComponent('CIRCULATION_PUMP', components);
             const heater = await this.getComponent('HEATER', components);
 
             if (check) {
@@ -282,6 +283,10 @@ module.exports = class mainDevice extends Homey.Device {
                 await this.setValue('measure_heater', heater.value, check);
             }
 
+            if(circulationPump) {
+                await this.setValue('measure_circulation_pump', circulationPump.value, check);
+            }
+
             await this.setValue('action_update_data', false, check);
             await this.setValue('locked', panelLock, check);
             await this.setValue('action_light_state', light, check);
@@ -332,8 +337,8 @@ module.exports = class mainDevice extends Homey.Device {
         if(index) {
             return components.find((el, id) => el.componentType === val && el.port === index);
         }
-
         return components.find((el, id) => el.componentType === val);
+       
     }
 
     async getComponentValue(val, components) {

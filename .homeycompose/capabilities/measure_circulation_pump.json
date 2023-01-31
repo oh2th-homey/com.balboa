@@ -1,0 +1,27 @@
+{
+  "type": "enum",
+  "title": {
+    "en": "Circulation pump",
+    "nl": "Circulatie pomp"
+  },
+  "getable": true,
+  "setable": false,
+  "uiComponent": "sensor",
+  "icon": "assets/icons/moisture.svg",
+  "values": [
+    {
+      "id": "LOW",
+      "title": {
+        "en": "LOW",
+        "nl": "LOW"
+      }
+    },
+    {
+      "id": "HIGH",
+      "title": {
+        "en": "HIGH",
+        "nl": "HIGH"
+      }
+    }
+  ]
+}
