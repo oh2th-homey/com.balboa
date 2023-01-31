@@ -1,0 +1,13 @@
+{
+  "title": {
+    "en": "Ozone state changed",
+    "nl": "Ozone status veranderd"
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=Balboa"
+    }
+  ]
+}
