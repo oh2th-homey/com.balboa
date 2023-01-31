@@ -139,7 +139,7 @@ module.exports = class mainDevice extends Homey.Device {
     async onCapability_ACTION(value) {
         try {
             this.homey.app.log(`[Device] ${this.getName()} - onCapability_ACTION`, value);
-            
+
             let data = null;
 
             if ('action_blower_state' in value) {
@@ -185,7 +185,7 @@ module.exports = class mainDevice extends Homey.Device {
                 data = await this._controlMySpaClient.setTempRange(value.action_temp_range);
             }
 
-            if(data) {
+            if (data) {
                 await this.setCapabilityValues(data);
             }
 
@@ -218,7 +218,7 @@ module.exports = class mainDevice extends Homey.Device {
             const settings = this.getSettings();
             const deviceInfo = deviceInfoOverride ? deviceInfoOverride : await this._controlMySpaClient.getSpa();
             const { currentState } = deviceInfo;
-            let { desiredTemp, targetDesiredTemp, currentTemp, panelLock, heaterMode, components, runMode, online, tempRange, setupParams } = currentState;
+            let { desiredTemp, targetDesiredTemp, currentTemp, panelLock, heaterMode, components, runMode, online, tempRange, setupParams, hour, minute, timeNotSet, military } = currentState;
 
             this.homey.app.log(`[Device] ${this.getName()} - deviceInfo =>`, currentState);
 
@@ -246,16 +246,16 @@ module.exports = class mainDevice extends Homey.Device {
             const tempRangeLow = (tempRange === 'LOW');
             const runModeReady = (runMode === 'Ready');
 
-            if(tempRangeHigh) {
+            if (tempRangeHigh) {
                 this.setCapabilityOptions('target_temperature', {
-                    "min":  toCelsius(setupParams.highRangeLow),
+                    "min": toCelsius(setupParams.highRangeLow),
                     "max": toCelsius(setupParams.highRangeHigh)
-                  })
-            } else if(tempRangeLow) {
+                })
+            } else if (tempRangeLow) {
                 this.setCapabilityOptions('target_temperature', {
-                    "min":  toCelsius(setupParams.lowRangeLow),
+                    "min": toCelsius(setupParams.lowRangeLow),
                     "max": toCelsius(setupParams.lowRangeHigh)
-                  })
+                })
             }
 
             if (pump0) {
@@ -303,7 +303,26 @@ module.exports = class mainDevice extends Homey.Device {
             if (desiredTemp && ((targetDesiredTemp === desiredTemp + 0.4) || targetDesiredTemp === setupParams.highRangeHigh || targetDesiredTemp == setupParams.lowRangeLow)) {
                 await this.setValue('target_temperature', toCelsius(desiredTemp), check, 10, settings.round_temp);
             } else {
-              await this.setValue('target_temperature', toCelsius(targetDesiredTemp - 0.4), check, 10, settings.round_temp);
+                await this.setValue('target_temperature', toCelsius(targetDesiredTemp - 0.4), check, 10, settings.round_temp);
+            }
+
+            // Set Spa clock if spa is online and clock_sync is enabled.
+            // - timeNotSet: true if time is not set in the spa
+            // - military: true if 24h clock is used in the spa
+            // - settings.clock_24: true if 24h clock is set by user in Homey
+            // - time difference between spa and Homey is more than 5 minutes
+            const timeNow = new Date();
+            const myTZ = this.homey.clock.getTimezone();
+            const myTime = timeNow.toLocaleString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: myTZ });
+            const myDate = timeNow.toLocaleString('en-US', { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: myTZ });
+            const myTimeMinutes = Number(myTime.split(':')[0]) * 60 + Number(myTime.split(':')[1]);
+            const spaTimeMinutes = (hour * 60) + minute;
+
+            if ((online && settings.clock_sync) && (timeNotSet || military !== settings.clock_24 || (Math.abs(spaTimeMinutes - myTimeMinutes) > 5))) {
+                this.homey.app.log(`[Device] ${this.getName()} - setClock ${myDate} ${myTime} ${myTZ} clock_24=${settings.clock_24}`);
+                await this._controlMySpaClient.setTime(myDate, myTime, settings.clock_24);
+            } else {
+                this.homey.app.log(`[Device] ${this.getName()} - setClock - clock sync disabled or clock is in sync.`);
             }
         } catch (error) {
             this.homey.app.error(error);
@@ -350,8 +369,8 @@ module.exports = class mainDevice extends Homey.Device {
                         .catch(this.error)
                         .then(this.homey.app.log(`[Device] ${this.getName()} - setValue ${newKey}_changed - Triggered: "${newKey} | ${newVal}"`));
                 }
-            } else if(oldVal !== newVal && !firstRun) {
-                this.homey.app.log(`[Device] ${this.getName()} - setValue ${newKey}_changed - Triggered: "${newKey} | ${newVal}"`)
+            } else if (oldVal !== newVal && !firstRun) {
+                this.homey.app.log(`[Device] ${this.getName()} - setValue ${newKey}_changed - Triggered: "${newKey} | ${newVal}"`);
             }
         }
     }

@@ -1,8 +1,10 @@
-## Control your Balboa Spa with this app.
+# Control your Balboa Spa with this app
 
-**Current features:**
+## Current features
+
 - Get spa status
 - Set temperature
 - Toggle heater mode
 - Lock/unlock panel
 - Control Jets, Blowers and Lights
+- Synchronize the spa clock with Homey

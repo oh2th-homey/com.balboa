@@ -59,6 +59,41 @@
           "value": ""
         }
       ]
+    },
+    {
+      "type": "group",
+      "label": {
+        "en": "Spa clock settings",
+        "nl": "Spa klok instellingen"
+      },
+      "children": [
+        {
+          "id": "clock_24",
+          "type": "checkbox",
+          "label": {
+            "en": "24h clock",
+            "nl": "24-uurs klok"
+          },
+          "hint":{
+            "en": "If enabled, the spa clock will be set to 24h format, otherwise 12h format.",
+            "nl": "Indien ingeschakeld, zal de spa klok ingesteld worden op 24-uurs formaat, anders 12-uurs formaat."
+          },
+          "value": true
+        },
+        {
+          "id": "clock_sync",
+          "type": "checkbox",
+          "label": {
+            "en": "Synchronize spa clock",
+            "nl": "Synchroniseer spa klok"
+          },
+          "hint": {
+            "en": "If enabled, the spa clock will be synchronized with Homey's local time when needed.",
+            "nl": "Indien ingeschakeld, zal de spa klok gesynchroniseerd worden met de lokale tijd van Homey wanneer nodig."
+          },
+          "value": false
+        }
+      ]
     }
   ]
 }

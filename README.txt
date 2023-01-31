@@ -6,3 +6,4 @@ Current features:
 - Toggle heater mode
 - Lock/unlock panel
 - Control Jets, Blowers and Lights
+- Synchronize the spa clock with Homey
