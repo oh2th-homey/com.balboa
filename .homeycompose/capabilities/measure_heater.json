@@ -1,12 +1,35 @@
 {
-    "type": "boolean",
+    "type": "enum",
     "title": {
-      "en": "Heater Active",
-      "nl": "Verwarming actief"
+      "en": "Heater",
+      "nl": "Verwarming"
     },
     "getable": true,
     "setable": false,
     "uiComponent": "sensor",
-    "icon": "assets/icons/thermometer-sun.svg"
+    "icon": "assets/icons/thermometer-sun.svg",
+    "values": [
+        {
+          "id": "ON",
+          "title": {
+            "en": "On",
+            "nl": "Aan"
+          }
+        },
+        {
+          "id": "OFF",
+          "title": {
+            "en": "Uit",
+            "nl": "Uit"
+          }
+        },
+        {
+            "id": "WAITING",
+            "title": {
+              "en": "Waiting",
+              "nl": "Wachten"
+            }
+          }
+      ]
   }
   

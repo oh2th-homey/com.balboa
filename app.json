@@ -122,9 +122,10 @@
         "id": "action_blower_state_changed"
       },
       {
+        "deprecated": true,
         "title": {
-          "en": "Heater changed",
-          "nl": "Verwarming veranderd"
+          "en": "Heater mode has changed",
+          "nl": "Verwarmingsmodus is veranderd"
         },
         "args": [
           {
@@ -134,6 +135,20 @@
           }
         ],
         "id": "action_heater_mode_changed"
+      },
+      {
+        "title": {
+          "en": "Heater State changed",
+          "nl": "Verwarming Status veranderd"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=Balboa"
+          }
+        ],
+        "id": "action_heater_state_changed"
       },
       {
         "title": {
@@ -329,12 +344,60 @@
       },
       {
         "title": {
-          "en": "heater is ready",
-          "nl": "verwarming is gereed"
+          "en": "Heater mode is ready",
+          "nl": "Verwarmingsmodus is gereed"
         },
         "titleFormatted": {
-          "en": "heater is !{{ready|rest}}",
-          "nl": "verwarming is !{{gereed|in rust}}"
+          "en": "Heater mode is [[condition_value]]",
+          "nl": "Verwarmingsmodus is [[condition_value]]"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=Balboa"
+          },
+          {
+            "name": "condition_value",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "ON",
+                "label": {
+                  "en": "On",
+                  "nl": "Aan"
+                }
+              },
+              {
+                "id": "OFF",
+                "label": {
+                  "en": "Uit",
+                  "nl": "Uit"
+                }
+              },
+              {
+                "id": "WAITING",
+                "label": {
+                  "en": "Waiting",
+                  "nl": "Wachten"
+                }
+              }
+            ]
+          }
+        ],
+        "platforms": [
+          "local"
+        ],
+        "id": "condition_HEATER"
+      },
+      {
+        "title": {
+          "en": "Heater is on",
+          "nl": "Verwarming is aan"
+        },
+        "titleFormatted": {
+          "en": "Heater is !{{on|off}}",
+          "nl": "Verwarming is !{{aan|uit}}"
         },
         "args": [
           {
@@ -346,7 +409,7 @@
         "platforms": [
           "local"
         ],
-        "id": "condition_HEATER"
+        "id": "condition_HEATER_state"
       },
       {
         "title": {
@@ -455,12 +518,12 @@
       },
       {
         "title": {
-          "en": "Is ready",
-          "nl": "Is beschikbaar"
+          "en": "Runmode is ready",
+          "nl": "Bedrijfsmodus is beschikbaar"
         },
         "titleFormatted": {
-          "en": "!{{is|isn't}} ready",
-          "nl": "!{{is|is niet}} beschikbaar"
+          "en": "Runmode !{{is|isn't}} ready",
+          "nl": "Bedrijfsmodus !{{is|is niet}} beschikbaar"
         },
         "args": [
           {
@@ -1135,15 +1198,38 @@
       "uiComponent": "button"
     },
     "measure_heater": {
-      "type": "boolean",
+      "type": "enum",
       "title": {
-        "en": "Heater Active",
-        "nl": "Verwarming actief"
+        "en": "Heater",
+        "nl": "Verwarming"
       },
       "getable": true,
       "setable": false,
       "uiComponent": "sensor",
-      "icon": "assets/icons/thermometer-sun.svg"
+      "icon": "assets/icons/thermometer-sun.svg",
+      "values": [
+        {
+          "id": "ON",
+          "title": {
+            "en": "On",
+            "nl": "Aan"
+          }
+        },
+        {
+          "id": "OFF",
+          "title": {
+            "en": "Uit",
+            "nl": "Uit"
+          }
+        },
+        {
+          "id": "WAITING",
+          "title": {
+            "en": "Waiting",
+            "nl": "Wachten"
+          }
+        }
+      ]
     },
     "measure_heater_mode": {
       "type": "enum",
@@ -1186,8 +1272,8 @@
     "measure_runmode": {
       "type": "boolean",
       "title": {
-        "en": "Is ready",
-        "nl": "Is beschikbaar"
+        "en": "Runmode",
+        "nl": "Bedrijfsmodus"
       },
       "deprecated": true,
       "getable": true,

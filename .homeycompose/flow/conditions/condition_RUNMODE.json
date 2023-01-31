@@ -1,11 +1,12 @@
 {
+  "deprecated": true,
   "title": {
-    "en": "Is ready",
-    "nl": "Is beschikbaar"
+    "en": "Runmode is ready",
+    "nl": "Bedrijfsmodus is beschikbaar"
   },
   "titleFormatted": {
-    "en": "!{{is|isn't}} ready",
-    "nl": "!{{is|is niet}} beschikbaar"
+    "en": "Runmode !{{is|isn't}} ready",
+    "nl": "Bedrijfsmodus !{{is|is niet}} beschikbaar"
   },
   "args": [
     {
@@ -14,7 +15,5 @@
       "filter": "driver_id=Balboa"
     }
   ],
-  "platforms": [
-    "local"
-  ]
+  "platforms": ["local"]
 }

@@ -224,6 +224,7 @@ module.exports = class mainDevice extends Homey.Device {
             const blower0 = await this.getComponent('BLOWER', components, '0');
             const blower1 = await this.getComponent('BLOWER', components, '1');
             const blower2 = await this.getComponent('BLOWER', components, '2');
+            const heater = await this.getComponent('HEATER', components);
 
             if (check) {
                 if (pump0) await this.addCapability('action_pump_state');
@@ -236,7 +237,6 @@ module.exports = class mainDevice extends Homey.Device {
 
             // ------------ Get values --------------
             const light = await this.getComponentValue('LIGHT', components);
-            const heaterOnOff = await this.getComponentValue('HEATER', components);
             const tempRangeHigh = (tempRange === 'HIGH');
             const tempRangeLow = (tempRange === 'LOW');
             const heaterReady = (heaterMode === 'READY');
@@ -278,6 +278,9 @@ module.exports = class mainDevice extends Homey.Device {
                 const blower2_val = blower2.value === 'HIGH';
                 await this.setValue('action_blower_state.2', blower2_val, check);
             }
+            if (heater) {
+                await this.setValue('measure_heater', heater.value, check);
+            }
 
             await this.setValue('action_update_data', false, check);
             await this.setValue('locked', panelLock, check);
@@ -288,7 +291,6 @@ module.exports = class mainDevice extends Homey.Device {
             await this.setValue('measure_heater_mode', heaterMode, check);
             await this.setValue('measure_online', online, check);
             await this.setValue('measure_runmode', runModeReady, check);
-            await this.setValue('measure_heater', heaterOnOff, check);
 
             if (currentTemp) await this.setValue('measure_temperature', toCelsius(currentTemp), check, 10, settings.round_temp);
             // If desiredTemp is available, compare it to targetDesiredTemp. There should be 0.4 difference for valid value.
@@ -313,6 +315,7 @@ module.exports = class mainDevice extends Homey.Device {
             const myTime = timeNow.toLocaleString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: myTZ });
             const myDate = timeNow.toLocaleString('en-US', { day: '2-digit', month: '2-digit', year: 'numeric', timeZone: myTZ });
             const myTimeMinutes = Number(myTime.split(':')[0]) * 60 + Number(myTime.split(':')[1]);
+            const spaTimeMinutes = (hour * 60) + minute;
 
             if ((online && settings.clock_sync) && (timeNotSet || military !== settings.clock_24 || (Math.abs(spaTimeMinutes - myTimeMinutes) > 5))) {
                 this.homey.app.log(`[Device] ${this.getName()} - setClock ${myDate} ${myTime} ${myTZ} clock_24=${settings.clock_24}`);
@@ -326,7 +329,11 @@ module.exports = class mainDevice extends Homey.Device {
     }
 
     async getComponent(val, components, index = null) {
-        return components.find((el, id) => el.componentType === val && el.port === index);
+        if(index) {
+            return components.find((el, id) => el.componentType === val && el.port === index);
+        }
+
+        return components.find((el, id) => el.componentType === val);
     }
 
     async getComponentValue(val, components) {
