@@ -1,0 +1,13 @@
+{
+  "title": {
+    "en": "Circulation pump state changed",
+    "nl": "Circulatie pomp status veranderd"
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=Balboa"
+    }
+  ]
+}

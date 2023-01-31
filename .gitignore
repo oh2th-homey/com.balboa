@@ -101,3 +101,5 @@ build/
 /package-lock.json
 
 .dccache
+
+lib/mock/

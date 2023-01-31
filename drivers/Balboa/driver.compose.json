@@ -15,6 +15,7 @@
         "measure_runmode",
         "measure_temperature_range",
         "measure_heater_mode",
+        "measure_circulation_pump",
         "action_light_state",
         "action_heater_mode",
         "action_update_data",
