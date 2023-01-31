@@ -4,41 +4,14 @@
     "nl": "Verwarmingsmodus is gereed"
   },
   "titleFormatted": {
-    "en": "Heater mode is [[condition_value]]",
-    "nl": "Verwarmingsmodus is [[condition_value]]"
+    "en": "Heater mode is !{{ready|rest}}",
+    "nl": "Verwarmingsmodus is !{{gereed|in rust}}"
   },
   "args": [
     {
       "name": "device",
       "type": "device",
       "filter": "driver_id=Balboa"
-    },
-    {
-      "name": "condition_value",
-      "type": "dropdown",
-      "values": [
-        {
-          "id": "ON",
-          "label": {
-            "en": "On",
-            "nl": "Aan"
-          }
-        },
-        {
-          "id": "OFF",
-          "label": {
-            "en": "Off",
-            "nl": "Uit"
-          }
-        },
-        {
-          "id": "WAITING",
-          "label": {
-            "en": "Waiting",
-            "nl": "Wachten"
-          }
-        }
-      ]
     }
   ],
   "platforms": ["local"]
