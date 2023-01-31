@@ -1,13 +1,13 @@
 {
   "type": "enum",
   "title": {
-    "en": "Heater",
-    "nl": "Verwarming"
+    "en": "Ozone",
+    "nl": "Ozone"
   },
   "getable": true,
   "setable": false,
   "uiComponent": "sensor",
-  "icon": "assets/icons/thermometer-sun.svg",
+  "icon": "assets/icons/cloud-fog2-fill.svg",
   "values": [
     {
       "id": "ON",

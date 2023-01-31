@@ -236,8 +236,8 @@
       },
       {
         "title": {
-          "en": "Heater has changed",
-          "nl": "Verwarming is veranderd"
+          "en": "Heater mode has changed",
+          "nl": "Verwarmingsmodus is veranderd"
         },
         "args": [
           {
@@ -261,6 +261,20 @@
           }
         ],
         "id": "measure_online_changed"
+      },
+      {
+        "title": {
+          "en": "Ozone state changed",
+          "nl": "Ozone status veranderd"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=Balboa"
+          }
+        ],
+        "id": "measure_ozone_state_changed"
       },
       {
         "deprecated": true,
@@ -379,8 +393,8 @@
       },
       {
         "title": {
-          "en": "heater is ready",
-          "nl": "verwarming is gereed"
+          "en": "Heater mode is ready",
+          "nl": "Verwarmingsmodus is gereed"
         },
         "titleFormatted": {
           "en": "Heater mode is [[condition_value]]",
@@ -406,7 +420,7 @@
               {
                 "id": "OFF",
                 "label": {
-                  "en": "Uit",
+                  "en": "Off",
                   "nl": "Uit"
                 }
               },
@@ -490,6 +504,54 @@
       },
       {
         "title": {
+          "en": "Ozone status is On",
+          "nl": "Ozone status is Aan"
+        },
+        "titleFormatted": {
+          "en": "Ozone status is [[condition_value]]",
+          "nl": "Ozone status is [[condition_value]]"
+        },
+        "args": [
+          {
+            "name": "device",
+            "type": "device",
+            "filter": "driver_id=Balboa"
+          },
+          {
+            "name": "condition_value",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "ON",
+                "label": {
+                  "en": "On",
+                  "nl": "Aan"
+                }
+              },
+              {
+                "id": "OFF",
+                "label": {
+                  "en": "Off",
+                  "nl": "Uit"
+                }
+              },
+              {
+                "id": "WAITING",
+                "label": {
+                  "en": "Waiting",
+                  "nl": "Wachten"
+                }
+              }
+            ]
+          }
+        ],
+        "platforms": [
+          "local"
+        ],
+        "id": "condition_OZONE_state"
+      },
+      {
+        "title": {
           "en": "Pump 1 is on",
           "nl": "Pomp 1 is aan"
         },
@@ -552,6 +614,7 @@
         "id": "condition_pump_state_2"
       },
       {
+        "deprecated": true,
         "title": {
           "en": "Runmode is ready",
           "nl": "Bedrijfsmodus is beschikbaar"
@@ -1281,7 +1344,7 @@
         }
       ]
     },
-    "measure_heater_mode": {
+    "measure_heater": {
       "type": "enum",
       "title": {
         "en": "Heater",
@@ -1352,6 +1415,40 @@
       "setable": false,
       "uiComponent": "sensor",
       "icon": "assets/icons/wifi.svg"
+    },
+    "measure_ozone": {
+      "type": "enum",
+      "title": {
+        "en": "Ozone",
+        "nl": "Ozone"
+      },
+      "getable": true,
+      "setable": false,
+      "uiComponent": "sensor",
+      "icon": "assets/icons/cloud-fog2-fill.svg",
+      "values": [
+        {
+          "id": "ON",
+          "title": {
+            "en": "On",
+            "nl": "Aan"
+          }
+        },
+        {
+          "id": "OFF",
+          "title": {
+            "en": "Uit",
+            "nl": "Uit"
+          }
+        },
+        {
+          "id": "WAITING",
+          "title": {
+            "en": "Waiting",
+            "nl": "Wachten"
+          }
+        }
+      ]
     },
     "measure_runmode": {
       "type": "boolean",
