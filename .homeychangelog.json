@@ -85,5 +85,8 @@
   },
   "1.8.0": {
     "en": "NEW: temperature fixes (@OH2TH)"
+  },
+  "1.9.0": {
+    "en": "NEW: SetTime | NEW: Add Ozone | NEW: add circulation_pump | NEW: add heater | FIX: heaterMode | FIX: deprecate runMode | FIX: deprecate double heaterMode flowcard"
   }
 }
