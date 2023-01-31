@@ -237,7 +237,7 @@ module.exports = class mainDevice extends Homey.Device {
             const blower1 = await this.getComponent('BLOWER', components, '1');
             const blower2 = await this.getComponent('BLOWER', components, '2');
             const circulationPump = await this.getComponent('CIRCULATION_PUMP', components);
-console.log(circulationPump)
+
             if (check) {
                 if (pump0) await this.addCapability('action_pump_state');
                 if (pump1) await this.addCapability('action_pump_state.1');
