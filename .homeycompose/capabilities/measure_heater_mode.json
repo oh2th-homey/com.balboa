@@ -1,8 +1,8 @@
 {
   "type": "enum",
   "title": {
-    "en": "Heater",
-    "nl": "Verwarming"
+    "en": "Heater mode",
+    "nl": "Verwarmings modus"
   },
   "getable": true,
   "setable": false,

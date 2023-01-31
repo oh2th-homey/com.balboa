@@ -1,8 +1,7 @@
 {
-  "deprecated": true,
   "title": {
-    "en": "Is ready state has changed",
-    "nl": "Is beschikbaar status is veranderd"
+    "en": "Heater State changed",
+    "nl": "Verwarming Status veranderd"
   },
   "args": [
     {

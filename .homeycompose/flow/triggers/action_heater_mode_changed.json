@@ -1,7 +1,8 @@
 {
+  "deprecated": true,
   "title": {
-    "en": "Heater changed",
-    "nl": "Verwarming veranderd"
+    "en": "Heater mode has changed",
+    "nl": "Verwarmingsmodus is veranderd"
   },
   "args": [
     {

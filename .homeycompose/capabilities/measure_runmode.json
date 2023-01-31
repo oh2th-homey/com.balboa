@@ -1,11 +1,12 @@
 {
   "type": "boolean",
   "title": {
-    "en": "Is ready",
-    "nl": "Is beschikbaar"
+    "en": "Runmode",
+    "nl": "Bedrijfsmodus"
   },
+  "deprecated": true,
   "getable": true,
   "setable": false,
-  "uiComponent": "sensor",
+  "uiComponent": null,
   "icon": "assets/icons/lightning-charge.svg"
 }

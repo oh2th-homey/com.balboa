@@ -1,7 +1,6 @@
 const Homey = require('homey');
 const ControlMySpa = require('../lib/balboa');
 const { sleep, decrypt, encrypt, toCelsius, toFahrenheit } = require('../lib/helpers');
-const mock = require('../lib/mock');
 const mockEnabled = false; // for debugging without API access
 
 module.exports = class mainDevice extends Homey.Device {
@@ -72,18 +71,6 @@ module.exports = class mainDevice extends Homey.Device {
             this.homey.app.log(`[Device] ${this.getName()} - setControlMySpaClient - error =>`, error);
         }
     }
-
-    // async resetControlMySpaClient() {
-    //     this.setUnavailable(`Re-Connecting to ${this.getName()}`);
-
-    //     if (this.onPollInterval) {
-    //         this.clearIntervals();
-    //     }
-
-    //     this._controlMySpaClient = undefined;
-
-    //     this.setControlMySpaClient()
-    // }
 
     // ------------- CapabilityListeners -------------
     async setCapabilityListeners() {
@@ -221,7 +208,7 @@ module.exports = class mainDevice extends Homey.Device {
             let deviceInfo = deviceInfoOverride ? deviceInfoOverride : await this._controlMySpaClient.getSpa();
 
             if (mockEnabled) {
-                deviceInfo = mock;
+                deviceInfo = require('../lib/mock');
             }
 
             const { currentState } = deviceInfo;
@@ -237,6 +224,7 @@ module.exports = class mainDevice extends Homey.Device {
             const blower1 = await this.getComponent('BLOWER', components, '1');
             const blower2 = await this.getComponent('BLOWER', components, '2');
             const circulationPump = await this.getComponent('CIRCULATION_PUMP', components);
+            const heater = await this.getComponent('HEATER', components);
 
             if (check) {
                 if (pump0) await this.addCapability('action_pump_state');
@@ -249,21 +237,21 @@ module.exports = class mainDevice extends Homey.Device {
 
             // ------------ Get values --------------
             const light = await this.getComponentValue('LIGHT', components);
-            const heaterReady = (heaterMode === 'READY');
             const tempRangeHigh = (tempRange === 'HIGH');
             const tempRangeLow = (tempRange === 'LOW');
-            const runModeReady = (runMode === 'Ready');
+            const heaterReady = (heaterMode === 'READY');
+            const runModeReady = (runMode === 'Ready'); // deprecated
 
             if (tempRangeHigh) {
                 this.setCapabilityOptions('target_temperature', {
-                    "min": toCelsius(setupParams.highRangeLow),
-                    "max": toCelsius(setupParams.highRangeHigh)
-                })
+                    min: toCelsius(setupParams.highRangeLow),
+                    max: toCelsius(setupParams.highRangeHigh)
+                });
             } else if (tempRangeLow) {
                 this.setCapabilityOptions('target_temperature', {
-                    "min": toCelsius(setupParams.lowRangeLow),
-                    "max": toCelsius(setupParams.lowRangeHigh)
-                })
+                    min: toCelsius(setupParams.lowRangeLow),
+                    max: toCelsius(setupParams.lowRangeHigh)
+                });
             }
 
             if (pump0) {
@@ -289,6 +277,9 @@ module.exports = class mainDevice extends Homey.Device {
             if (blower2) {
                 const blower2_val = blower2.value === 'HIGH';
                 await this.setValue('action_blower_state.2', blower2_val, check);
+            }
+            if (heater) {
+                await this.setValue('measure_heater', heater.value, check);
             }
 
             if(circulationPump) {
@@ -352,7 +343,7 @@ module.exports = class mainDevice extends Homey.Device {
     async getComponentValue(val, components) {
         const comp = components.find((el, id) => el.componentType === val);
         if (comp) {
-            return comp.value === 'HIGH';
+            return comp.value === 'HIGH' || comp.value === 'ON';
         }
 
         return false;
@@ -364,7 +355,7 @@ module.exports = class mainDevice extends Homey.Device {
         if (this.hasCapability(key)) {
             const newKey = key.replace('.', '_');
             const oldVal = await this.getCapabilityValue(key);
-            const newVal = roundNumber ? Math.round(value) : value
+            const newVal = roundNumber ? Math.round(value) : value;
 
             this.homey.app.log(`[Device] ${this.getName()} - setValue - oldValue => ${key} => `, oldVal, newVal);
 
