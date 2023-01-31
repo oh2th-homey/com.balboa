@@ -1,7 +1,6 @@
 const Homey = require('homey');
 const ControlMySpa = require('../lib/balboa');
 const { sleep, decrypt, encrypt, toCelsius, toFahrenheit } = require('../lib/helpers');
-const mock = require('../lib/mock');
 const mockEnabled = false; // for debugging without API access
 
 module.exports = class mainDevice extends Homey.Device {
@@ -209,7 +208,7 @@ module.exports = class mainDevice extends Homey.Device {
             let deviceInfo = deviceInfoOverride ? deviceInfoOverride : await this._controlMySpaClient.getSpa();
 
             if (mockEnabled) {
-                deviceInfo = mock;
+                deviceInfo = require('../lib/mock');
             }
 
             const { currentState } = deviceInfo;
