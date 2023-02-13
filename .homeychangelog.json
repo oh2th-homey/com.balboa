@@ -91,5 +91,8 @@
   },
   "1.9.1": {
     "en": "FIX: heaterMode and Heater conditions"
+  },
+  "1.9.2": {
+    "en": "FIX: InvalidEnumValueError: OFF is not a valid enum value"
   }
 }
