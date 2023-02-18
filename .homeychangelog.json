@@ -94,5 +94,8 @@
   },
   "1.9.2": {
     "en": "FIX: InvalidEnumValueError: OFF is not a valid enum value"
+  },
+  "1.9.3": {
+    "en": "FIX: app error"
   }
 }
