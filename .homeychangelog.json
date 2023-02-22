@@ -97,5 +97,8 @@
   },
   "1.9.3": {
     "en": "FIX: app error"
+  },
+  "1.9.4": {
+    "en": "FIX: refresh acces_token when expired"
   }
 }
