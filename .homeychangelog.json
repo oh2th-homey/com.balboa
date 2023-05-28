@@ -100,5 +100,8 @@
   },
   "1.9.4": {
     "en": "FIX: refresh acces_token when expired"
+  },
+  "1.9.5": {
+    "en": "FIX: heatermode flowcard"
   }
 }
