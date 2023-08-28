@@ -122,10 +122,9 @@
         "id": "action_blower_state_changed"
       },
       {
-        "deprecated": true,
         "title": {
-          "en": "Heater mode has changed",
-          "nl": "Verwarmingsmodus is veranderd"
+          "en": "Heater State changed",
+          "nl": "Verwarming Status veranderd"
         },
         "args": [
           {
@@ -137,6 +136,7 @@
         "id": "action_heater_mode_changed"
       },
       {
+        "deprecated": true,
         "title": {
           "en": "Heater State changed",
           "nl": "Verwarming Status veranderd"
@@ -232,7 +232,7 @@
             "filter": "driver_id=Balboa"
           }
         ],
-        "id": "measure_circulation_pump_state_changed"
+        "id": "measure_circulation_pump_changed"
       },
       {
         "title": {
