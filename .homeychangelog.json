@@ -103,5 +103,8 @@
   },
   "1.9.5": {
     "en": "FIX: heatermode flowcard"
+  },
+  "1.9.6": {
+    "en": "FIX: flowcard triggers"
   }
 }
