@@ -112,5 +112,8 @@
   },
   "1.10.0": {
     "en": "NEW: add heater mode Ready/Rest cards"
+  },
+  "1.10.1": {
+    "en": "FIX: typo"
   }
 }
