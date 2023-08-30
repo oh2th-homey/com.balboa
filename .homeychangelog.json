@@ -106,5 +106,8 @@
   },
   "1.9.6": {
     "en": "FIX: flowcard triggers"
+  },
+  "1.9.7": {
+    "en": "FIX: heater mode flowcard duplicate"
   }
 }
