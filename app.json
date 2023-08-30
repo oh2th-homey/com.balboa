@@ -122,6 +122,7 @@
         "id": "action_blower_state_changed"
       },
       {
+        "deprecated": true,
         "title": {
           "en": "Heater State changed",
           "nl": "Verwarming Status veranderd"
