@@ -118,5 +118,8 @@
   },
   "1.10.2": {
     "en": "FIX: heater mode card"
+  },
+  "1.10.3": {
+    "en": "FIX: trigger on start"
   }
 }
