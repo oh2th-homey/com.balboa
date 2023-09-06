@@ -1,11 +1,11 @@
 {
   "title": {
-    "en": "Toggle Heater to Ready or Rest",
-    "nl": "Schakel verwarming naar Beschikbaar of Rust"
+    "en": "Toggle Heater to Ready",
+    "nl": "Schakel verwarming naar Beschikbaar"
   },
   "titleFormatted": {
-    "en": "Toggle Heater to Ready or Rest",
-    "nl": "Schakel verwarming naar Beschikbaar of Rust"
+    "en": "Toggle Heater to Ready",
+    "nl": "Schakel verwarming naar Beschikbaar"
   },
   "args": [
     {

@@ -422,24 +422,28 @@ module.exports = class mainDevice extends Homey.Device {
 
         const deviceCapabilities = this.getCapabilities();
 
-        this.homey.app.log(`[Device] ${this.getName()} - Found capabilities =>`, deviceCapabilities);
+        this.homey.app.log(`[Device] ${this.getName()} - Device capabilities =>`, deviceCapabilities);
         this.homey.app.log(`[Device] ${this.getName()} - Driver capabilities =>`, driverCapabilities);
 
-        if (deviceCapabilities.length !== driverCapabilities.length) {
-            await this.updateCapabilities(driverCapabilities, deviceCapabilities);
-        }
-
-        return deviceCapabilities;
+        
+        await this.updateCapabilities(driverCapabilities, deviceCapabilities);
     }
 
     async updateCapabilities(driverCapabilities, deviceCapabilities) {
-        this.homey.app.log(`[Device] ${this.getName()} - Add new capabilities =>`, driverCapabilities);
         try {
-            deviceCapabilities.forEach((c) => {
+            const newC = driverCapabilities.filter((d) => !deviceCapabilities.includes(d));
+            const oldC = deviceCapabilities.filter((d) => !driverCapabilities.includes(d));
+
+            this.homey.app.log(`[Device] ${this.getName()} - Got old capabilities =>`, oldC);
+            this.homey.app.log(`[Device] ${this.getName()} - Got new capabilities =>`, newC);
+
+            oldC.forEach((c) => {
+                this.homey.app.log(`[Device] ${this.getName()} - updateCapabilities => Remove `, c);
                 this.removeCapability(c);
             });
             await sleep(2000);
-            driverCapabilities.forEach((c) => {
+            newC.forEach((c) => {
+                this.homey.app.log(`[Device] ${this.getName()} - updateCapabilities => Add `, c);
                 this.addCapability(c);
             });
             await sleep(2000);
