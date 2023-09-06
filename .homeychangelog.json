@@ -115,5 +115,8 @@
   },
   "1.10.1": {
     "en": "FIX: typo"
+  },
+  "1.10.2": {
+    "en": "FIX: heater mode card"
   }
 }
