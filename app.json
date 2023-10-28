@@ -1050,6 +1050,651 @@
       },
       {
         "title": {
+          "en": "Set filter cycle"
+        },
+        "titleFormatted": {
+          "en": "Set [[filter]] cycle for [[interval]] starting at [[startTime]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "placeholder": {
+              "en": "Select device",
+              "nl": "Selecteer apparaat"
+            },
+            "filter": "driver_id=Balboa&capabilities=action_set_filter_cycle"
+          },
+          {
+            "type": "dropdown",
+            "name": "filter",
+            "title": {
+              "en": "Filter"
+            },
+            "values": [
+              {
+                "id": "0",
+                "title": {
+                  "en": "Filter 1"
+                }
+              },
+              {
+                "id": "1",
+                "title": {
+                  "en": "Filter 2"
+                }
+              }
+            ]
+          },
+          {
+            "type": "dropdown",
+            "name": "interval",
+            "title": {
+              "en": "Interval"
+            },
+            "values": [
+              {
+                "id": "0",
+                "title": {
+                  "en": "disable"
+                }
+              },
+              {
+                "id": "1",
+                "title": {
+                  "en": "15 minutes"
+                }
+              },
+              {
+                "id": "2",
+                "title": {
+                  "en": "30 minutes"
+                }
+              },
+              {
+                "id": "3",
+                "title": {
+                  "en": "45 minutes"
+                }
+              },
+              {
+                "id": "4",
+                "title": {
+                  "en": "1 hour"
+                }
+              },
+              {
+                "id": "5",
+                "title": {
+                  "en": "1 hour 15 minutes"
+                }
+              },
+              {
+                "id": "6",
+                "title": {
+                  "en": "1 hour 30 minutes"
+                }
+              },
+              {
+                "id": "7",
+                "title": {
+                  "en": "1 hour 45 minutes"
+                }
+              },
+              {
+                "id": "8",
+                "title": {
+                  "en": "2 hours"
+                }
+              },
+              {
+                "id": "9",
+                "title": {
+                  "en": "2 hours 15 minutes"
+                }
+              },
+              {
+                "id": "10",
+                "title": {
+                  "en": "2 hours 30 minutes"
+                }
+              },
+              {
+                "id": "11",
+                "title": {
+                  "en": "2 hours 45 minutes"
+                }
+              },
+              {
+                "id": "12",
+                "title": {
+                  "en": "3 hours2"
+                }
+              },
+              {
+                "id": "13",
+                "title": {
+                  "en": "3 hours 15 minutes"
+                }
+              },
+              {
+                "id": "14",
+                "title": {
+                  "en": "3 hours 30 minutes"
+                }
+              },
+              {
+                "id": "15",
+                "title": {
+                  "en": "3 hours 45 minutes"
+                }
+              },
+              {
+                "id": "16",
+                "title": {
+                  "en": "4 hours6"
+                }
+              },
+              {
+                "id": "17",
+                "title": {
+                  "en": "4 hours 15 minutes"
+                }
+              },
+              {
+                "id": "18",
+                "title": {
+                  "en": "4 hours 30 minutes"
+                }
+              },
+              {
+                "id": "19",
+                "title": {
+                  "en": "4 hours 45 minutes"
+                }
+              },
+              {
+                "id": "20",
+                "title": {
+                  "en": "5 hours"
+                }
+              },
+              {
+                "id": "21",
+                "title": {
+                  "en": "5 hours 15 minutes"
+                }
+              },
+              {
+                "id": "22",
+                "title": {
+                  "en": "5 hours 30 minutes"
+                }
+              },
+              {
+                "id": "23",
+                "title": {
+                  "en": "5 hours 45 minutes"
+                }
+              },
+              {
+                "id": "24",
+                "title": {
+                  "en": "6 hours"
+                }
+              },
+              {
+                "id": "25",
+                "title": {
+                  "en": "6 hours 15 minutes"
+                }
+              },
+              {
+                "id": "26",
+                "title": {
+                  "en": "6 hours 30 minutes"
+                }
+              },
+              {
+                "id": "27",
+                "title": {
+                  "en": "6 hours 45 minutes"
+                }
+              },
+              {
+                "id": "28",
+                "title": {
+                  "en": "7 hours"
+                }
+              },
+              {
+                "id": "29",
+                "title": {
+                  "en": "7 hours 15 minutes"
+                }
+              },
+              {
+                "id": "30",
+                "title": {
+                  "en": "7 hours 30 minutes"
+                }
+              },
+              {
+                "id": "31",
+                "title": {
+                  "en": "7 hours 45 minutes"
+                }
+              },
+              {
+                "id": "32",
+                "title": {
+                  "en": "8 hours"
+                }
+              },
+              {
+                "id": "33",
+                "title": {
+                  "en": "8 hours 15 minutes"
+                }
+              },
+              {
+                "id": "34",
+                "title": {
+                  "en": "8 hours 30 minutes"
+                }
+              },
+              {
+                "id": "35",
+                "title": {
+                  "en": "8 hours 45 minutes"
+                }
+              },
+              {
+                "id": "36",
+                "title": {
+                  "en": "9 hours"
+                }
+              },
+              {
+                "id": "37",
+                "title": {
+                  "en": "9 hours 15 minutes"
+                }
+              },
+              {
+                "id": "38",
+                "title": {
+                  "en": "9 hours 30 minutes"
+                }
+              },
+              {
+                "id": "39",
+                "title": {
+                  "en": "9 hours 45 minutes"
+                }
+              },
+              {
+                "id": "40",
+                "title": {
+                  "en": "10 hours"
+                }
+              },
+              {
+                "id": "41",
+                "title": {
+                  "en": "10 hours 15 minutes"
+                }
+              },
+              {
+                "id": "42",
+                "title": {
+                  "en": "10 hours 30 minutes"
+                }
+              },
+              {
+                "id": "43",
+                "title": {
+                  "en": "10 hours 45 minutes"
+                }
+              },
+              {
+                "id": "44",
+                "title": {
+                  "en": "11 hours"
+                }
+              },
+              {
+                "id": "45",
+                "title": {
+                  "en": "11 hours 15 minutes"
+                }
+              },
+              {
+                "id": "46",
+                "title": {
+                  "en": "11 hours 30 minutes"
+                }
+              },
+              {
+                "id": "47",
+                "title": {
+                  "en": "11 hours 45 minutes"
+                }
+              },
+              {
+                "id": "48",
+                "title": {
+                  "en": "12 hours"
+                }
+              },
+              {
+                "id": "49",
+                "title": {
+                  "en": "12 hours 15 minutes"
+                }
+              },
+              {
+                "id": "50",
+                "title": {
+                  "en": "12 hours 30 minutes"
+                }
+              },
+              {
+                "id": "51",
+                "title": {
+                  "en": "12 hours 45 minutes"
+                }
+              },
+              {
+                "id": "52",
+                "title": {
+                  "en": "13 hours"
+                }
+              },
+              {
+                "id": "53",
+                "title": {
+                  "en": "13 hours 15 minutes"
+                }
+              },
+              {
+                "id": "54",
+                "title": {
+                  "en": "13 hours 30 minutes"
+                }
+              },
+              {
+                "id": "55",
+                "title": {
+                  "en": "13 hours 45 minutes"
+                }
+              },
+              {
+                "id": "56",
+                "title": {
+                  "en": "14 hours"
+                }
+              },
+              {
+                "id": "57",
+                "title": {
+                  "en": "14 hours 15 minutes"
+                }
+              },
+              {
+                "id": "58",
+                "title": {
+                  "en": "14 hours 30 minutes"
+                }
+              },
+              {
+                "id": "59",
+                "title": {
+                  "en": "14 hours 45 minutes"
+                }
+              },
+              {
+                "id": "60",
+                "title": {
+                  "en": "15 hours"
+                }
+              },
+              {
+                "id": "61",
+                "title": {
+                  "en": "15 hours 15 minutes"
+                }
+              },
+              {
+                "id": "62",
+                "title": {
+                  "en": "15 hours 30 minutes"
+                }
+              },
+              {
+                "id": "63",
+                "title": {
+                  "en": "15 hours 45 minutes"
+                }
+              },
+              {
+                "id": "64",
+                "title": {
+                  "en": "16 hours"
+                }
+              },
+              {
+                "id": "65",
+                "title": {
+                  "en": "16 hours 15 minutes"
+                }
+              },
+              {
+                "id": "66",
+                "title": {
+                  "en": "16 hours 30 minutes"
+                }
+              },
+              {
+                "id": "67",
+                "title": {
+                  "en": "16 hours 45 minutes"
+                }
+              },
+              {
+                "id": "68",
+                "title": {
+                  "en": "17 hours"
+                }
+              },
+              {
+                "id": "69",
+                "title": {
+                  "en": "17 hours 15 minutes"
+                }
+              },
+              {
+                "id": "70",
+                "title": {
+                  "en": "17 hours 30 minutes"
+                }
+              },
+              {
+                "id": "71",
+                "title": {
+                  "en": "17 hours 45 minutes"
+                }
+              },
+              {
+                "id": "72",
+                "title": {
+                  "en": "18 hours"
+                }
+              },
+              {
+                "id": "73",
+                "title": {
+                  "en": "18 hours 15 minutes"
+                }
+              },
+              {
+                "id": "74",
+                "title": {
+                  "en": "18 hours 30 minutes"
+                }
+              },
+              {
+                "id": "75",
+                "title": {
+                  "en": "18 hours 45 minutes"
+                }
+              },
+              {
+                "id": "76",
+                "title": {
+                  "en": "19 hours"
+                }
+              },
+              {
+                "id": "77",
+                "title": {
+                  "en": "19 hours 15 minutes"
+                }
+              },
+              {
+                "id": "78",
+                "title": {
+                  "en": "19 hours 30 minutes"
+                }
+              },
+              {
+                "id": "79",
+                "title": {
+                  "en": "19 hours 45 minutes"
+                }
+              },
+              {
+                "id": "80",
+                "title": {
+                  "en": "20 hours"
+                }
+              },
+              {
+                "id": "81",
+                "title": {
+                  "en": "20 hours 15 minutes"
+                }
+              },
+              {
+                "id": "82",
+                "title": {
+                  "en": "20 hours 30 minutes"
+                }
+              },
+              {
+                "id": "83",
+                "title": {
+                  "en": "20 hours 45 minutes"
+                }
+              },
+              {
+                "id": "84",
+                "title": {
+                  "en": "21 hours"
+                }
+              },
+              {
+                "id": "85",
+                "title": {
+                  "en": "21 hours 15 minutes"
+                }
+              },
+              {
+                "id": "86",
+                "title": {
+                  "en": "21 hours 30 minutes"
+                }
+              },
+              {
+                "id": "87",
+                "title": {
+                  "en": "21 hours 45 minutes"
+                }
+              },
+              {
+                "id": "88",
+                "title": {
+                  "en": "22 hours"
+                }
+              },
+              {
+                "id": "89",
+                "title": {
+                  "en": "22 hours 15 minutes"
+                }
+              },
+              {
+                "id": "90",
+                "title": {
+                  "en": "22 hours 30 minutes"
+                }
+              },
+              {
+                "id": "91",
+                "title": {
+                  "en": "22 hours 45 minutes"
+                }
+              },
+              {
+                "id": "92",
+                "title": {
+                  "en": "23 hours2"
+                }
+              },
+              {
+                "id": "93",
+                "title": {
+                  "en": "23 hours 15 minutes"
+                }
+              },
+              {
+                "id": "94",
+                "title": {
+                  "en": "23 hours 30 minutes"
+                }
+              },
+              {
+                "id": "95",
+                "title": {
+                  "en": "23 hours 45 minutes"
+                }
+              },
+              {
+                "id": "96",
+                "title": {
+                  "en": "24 hours"
+                }
+              }
+            ]
+          },
+          {
+            "type": "time",
+            "name": "startTime",
+            "title": {
+              "en": "Start Time"
+            },
+            "placeholder": {
+              "en": "13:37"
+            }
+          }
+        ],
+        "platforms": [
+          "local"
+        ],
+        "id": "action_set_filter_cycle"
+      },
+      {
+        "title": {
           "en": "Set temperature mode",
           "nl": "Zet temperatuur modus"
         },
@@ -1265,7 +1910,8 @@
         "action_light_state",
         "action_heater_mode",
         "action_update_data",
-        "action_temp_range"
+        "action_temp_range",
+        "action_set_filter_cycle"
       ],
       "capabilitiesOptions": {
         "action_pump_state.1": {
@@ -1347,6 +1993,15 @@
       "getable": true,
       "setable": true,
       "uiComponent": "button"
+    },
+    "action_set_filter_cycle": {
+      "type": "boolean",
+      "title": {
+        "en": "Filter Cycle"
+      },
+      "getable": true,
+      "setable": true,
+      "uiComponent": null
     },
     "action_temp_range": {
       "type": "boolean",

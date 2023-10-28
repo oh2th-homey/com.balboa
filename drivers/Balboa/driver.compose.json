@@ -21,7 +21,8 @@
         "action_light_state",
         "action_heater_mode",
         "action_update_data",
-        "action_temp_range"
+        "action_temp_range",
+        "action_set_filter_cycle"
     ],
     "capabilitiesOptions": {
         "action_pump_state.1": {

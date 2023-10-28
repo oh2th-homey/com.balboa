@@ -174,6 +174,13 @@ module.exports = class mainDevice extends Homey.Device {
                 data = await this._controlMySpaClient.setTempRange(value.action_temp_range);
             }
 
+            if ('filter' in value && 'interval' in value) {
+                if(value.filter === 0 && value.interval === 0) {
+                    throw new Error('Filter 1 cannot be disabled');
+                }
+                data = await this._controlMySpaClient.setFilterCycleIntervalSchedule(value.filter, value.interval, value.startTime);     
+            }
+
             if (data) {
                 await this.setCapabilityValues(data);
             }

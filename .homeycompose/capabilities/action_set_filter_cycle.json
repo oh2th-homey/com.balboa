@@ -1,0 +1,9 @@
+{
+  "type": "boolean",
+  "title": {
+    "en": "Filter Cycle"
+  },
+  "getable": true,
+  "setable": true,
+  "uiComponent": null
+}
