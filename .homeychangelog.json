@@ -127,5 +127,8 @@
   },
   "1.11.0": {
     "en": "NEW: add filter cycle"
+  },
+  "1.11.1": {
+    "en": "NEW: add filter cycle card with droptoken support"
   }
 }
