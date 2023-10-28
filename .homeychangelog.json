@@ -124,5 +124,8 @@
   },
   "1.10.4": {
     "en": "FIX: Heater state"
+  },
+  "1.11.0": {
+    "en": "NEW: add filter cycle"
   }
 }
