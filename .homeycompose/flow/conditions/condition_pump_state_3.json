@@ -1,0 +1,20 @@
+{
+  "title": {
+    "en": "Pump 4 is on",
+    "nl": "Pomp 4 is aan"
+  },
+  "titleFormatted": {
+    "en": "Pump 4 is !{{on|off}}",
+    "nl": "Pomp 4 is !{{aan|uit}}"
+  },
+  "args": [
+    {
+      "name": "device",
+      "type": "device",
+      "filter": "driver_id=Balboa&capabilities=action_pump_state.3"
+    }
+  ],
+  "platforms": [
+    "local"
+  ]
+}

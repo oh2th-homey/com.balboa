@@ -1,0 +1,13 @@
+{
+  "title": {
+    "en": "Pump State 3 changed",
+    "nl": "Pomp Status 3 veranderd"
+  },
+  "args": [
+    {
+      "type": "device",
+      "name": "device",
+      "filter": "driver_id=Balboa|BWA"
+    }
+  ]
+}

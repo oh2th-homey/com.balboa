@@ -13,7 +13,7 @@
         "en": "Select device",
         "nl": "Selecteer apparaat"
       },
-      "filter": "driver_id=Balboa|BWA&capabilities=action_set_filter_cycle"
+      "filter": "driver_id=Balboa&capabilities=action_set_filter_cycle"
     },
     {
       "type": "dropdown",
