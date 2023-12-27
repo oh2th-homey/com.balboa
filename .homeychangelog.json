@@ -136,5 +136,8 @@
   },
   "1.11.3": {
     "en": " NEW: add filter cycle card with droptoken support"
+  },
+  "2.0.0": {
+    "en": "BREAK: App rebrand to Balboa | NEW: add Balboa BWA | NEW: improve login screen"
   }
 }

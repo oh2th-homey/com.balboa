@@ -1,6 +1,6 @@
 {
   "id": "com.balboa",
-  "version": "1.11.3",
+  "version": "2.0.0",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "platforms": [
@@ -8,8 +8,8 @@
   ],
   "brandColor": "#000000",
   "name": {
-    "en": "ControlMySpa",
-    "nl": "ControlMySpa"
+    "en": "Balboa",
+    "nl": "Balboa"
   },
   "description": {
     "en": "Stay connected to your spa from anywhere",
@@ -21,6 +21,8 @@
       "hot tub",
       "jacuzzi",
       "balboa",
+      "bwa",
+      "controlmyspa",
       "water",
       "heating",
       "bubbles",
@@ -39,13 +41,13 @@
   },
   "author": {
     "name": "Martijn Poppen",
-    "email": "controlmyspa@martijnpoppen.nl"
+    "email": "balboa@martijnpoppen.nl"
   },
   "contributors": {
     "developers": [
       {
         "name": "Martijn Poppen",
-        "email": "controlmyspa@martijnpoppen.nl"
+        "email": "balboa@martijnpoppen.nl"
       },
       {
         "name": "Tapio Heiskanen"
