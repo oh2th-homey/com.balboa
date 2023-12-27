@@ -139,5 +139,8 @@
   },
   "2.0.0": {
     "en": "BREAK: App rebrand to Balboa | NEW: add Balboa BWA | NEW: improve login screen"
+  },
+  "2.0.1": {
+    "en": "FIX: flowcards"
   }
 }
