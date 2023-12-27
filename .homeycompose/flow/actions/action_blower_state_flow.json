@@ -15,7 +15,7 @@
         "en": "Select device",
         "nl": "Selecteer apparaat"
       },
-      "filter": "driver_id=Balboa&capabilities=action_blower_state"
+      "filter": "driver_id=Balboa|BWA&capabilities=action_blower_state"
     },
     {
       "name": "action_on_off",

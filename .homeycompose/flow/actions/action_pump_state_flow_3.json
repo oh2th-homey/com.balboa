@@ -1,11 +1,11 @@
 {
   "title": {
-    "en": "Turn light on or off",
-    "nl": "Zet lamp aan of uit"
+    "en": "Turn Pump 4 on or off",
+    "nl": "Zet Pomp 4 aan of uit"
   },
   "titleFormatted": {
-    "en": "Turn Light [[action_on_off]]",
-    "nl": "Zet Lamp [[action_on_off]]"
+    "en": "Set Pump 4 [[action_on_off]]",
+    "nl": "Zet Pomp 4 [[action_on_off]]"
   },
   "args": [
     {
@@ -15,7 +15,7 @@
         "en": "Select device",
         "nl": "Selecteer apparaat"
       },
-      "filter": "driver_id=Balboa|BWA&capabilities=action_light_state"
+      "filter": "driver_id=BWA&capabilities=action_pump_state.4"
     },
     {
       "name": "action_on_off",

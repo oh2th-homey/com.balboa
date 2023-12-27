@@ -15,7 +15,7 @@
         "en": "Select device",
         "nl": "Selecteer apparaat"
       },
-      "filter": "driver_id=Balboa&capabilities=action_heater_mode"
+      "filter": "driver_id=Balboa|BWA&capabilities=action_heater_mode"
     }
   ],
   "platforms": [

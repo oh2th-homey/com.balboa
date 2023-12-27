@@ -129,9 +129,9 @@
       ]
     },
     {
-        "type": "time",
+        "type": "text",
         "name": "startTime",
-        "title": { "en": "Start Time" },
+        "title": { "en": "Start Time (Token / Variable)" },
         "placeholder": { "en": "13:37" }
       }
   ],

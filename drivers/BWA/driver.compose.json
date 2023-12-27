@@ -1,28 +1,21 @@
 {
     "name": {
-        "en": "ControlMySpa",
-        "nl": "ControlMySpa"
+        "en": "Balboa BWA",
+        "nl": "Balboa BWA"
     },
     "images": {
-        "large": "drivers/Balboa/assets/images/large.jpg",
-        "small": "drivers/Balboa/assets/images/small.jpg"
+        "large": "drivers/BWA/assets/images/large.jpg",
+        "small": "drivers/BWA/assets/images/small.jpg"
     },
     "capabilities": [
-        "locked",
         "target_temperature",
         "measure_temperature",
         "measure_online",
-        "measure_runmode",
-        "measure_temperature_range",
         "measure_heater",
         "measure_heater_mode",
-        "measure_circulation_pump",
-        "measure_ozone",
         "action_light_state",
         "action_heater_mode",
-        "action_update_data",
-        "action_temp_range",
-        "action_set_filter_cycle"
+        "action_update_data"
     ],
     "capabilitiesOptions": {
         "action_pump_state.1": {
@@ -35,6 +28,24 @@
             "title": {
                 "en": "Pump State 3",
                 "nl": "Pomp Status 3"
+            }
+        },
+        "action_pump_state.3": {
+            "title": {
+                "en": "Pump State 4",
+                "nl": "Pomp Status 4"
+            }
+        },
+        "action_pump_state.4": {
+            "title": {
+                "en": "Pump State 5",
+                "nl": "Pomp Status 5"
+            }
+        },
+        "action_pump_state.5": {
+            "title": {
+                "en": "Pump State 6",
+                "nl": "Pomp Status 6"
             }
         },
         "action_blower_state.1": {
@@ -53,12 +64,6 @@
             "min": 26.5,
             "max": 40,
             "step": 0.5
-        },
-        "locked": {
-            "title": {
-                "nl": "Paneel slot",
-                "en": "Panel lock"
-            }
         }
     },
     "$extends": [

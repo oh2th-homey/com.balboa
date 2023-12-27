@@ -1,13 +1,37 @@
 {
   "pair": [
     {
-      "id": "login_controlmyspa"
+        "id": "login_credentials",
+        "template": "login_credentials",
+        "options": {
+          "usernameLabel": {
+            "en": "Username",
+            "nl": "Gebruikersnaam"
+          },
+          "usernamePlaceholder": {
+            "en": "example: johndoe",
+            "nl": "bijvoorbeeld: johndoe"
+          },
+          "usernameValue": {
+            "en": "johndoe",
+            "nl": "johndoe"
+          },
+          "passwordLabel": {
+            "en": "Password",
+            "nl": "Wachtwoord"
+          },
+          "passwordPlaceholder": {
+            "en": "Password",
+            "nl": "Wachtwoord"
+          },
+          "logo": "../../../assets/controlmyspa.svg"
+        }
     },
     {
       "id": "list_devices",
       "template": "list_devices",
       "navigation": {
-        "prev": "login_controlmyspa",
+        "prev": "login_credentials",
         "next": "add_devices"
       }
     },

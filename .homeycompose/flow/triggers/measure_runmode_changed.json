@@ -8,7 +8,7 @@
     {
       "type": "device",
       "name": "device",
-      "filter": "driver_id=Balboa"
+      "filter": "driver_id=Balboa|BWA"
     }
   ]
 }

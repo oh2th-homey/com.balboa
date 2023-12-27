@@ -15,7 +15,7 @@
         "en": "Select device",
         "nl": "Selecteer apparaat"
       },
-      "filter": "driver_id=Balboa&capabilities=action_update_data"
+      "filter": "driver_id=Balboa|BWA&capabilities=action_update_data"
     }
   ],
   "platforms": [
