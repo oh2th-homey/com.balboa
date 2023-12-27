@@ -145,5 +145,8 @@
   },
   "2.0.2": {
     "en": "FIX: flowcards"
+  },
+  "2.0.3": {
+    "en": "FIX: pairing and error handling"
   }
 }
