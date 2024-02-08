@@ -154,5 +154,8 @@
   },
   "2.0.5": {
     "en": "FIX: ControlMySpa targettemperature"
+  },
+  "2.1.0": {
+    "en": "NEW: add temperature range card for BWA module"
   }
 }
