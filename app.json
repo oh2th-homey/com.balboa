@@ -2597,7 +2597,7 @@
               "en": "Select device",
               "nl": "Selecteer apparaat"
             },
-            "filter": "driver_id=Balboa&capabilities=action_temp_range"
+            "filter": "driver_id=Balboa|BWA&capabilities=action_temp_range"
           },
           {
             "name": "action_temp_range",

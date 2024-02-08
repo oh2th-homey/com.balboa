@@ -7,6 +7,7 @@ const {
     updateBlowerStatus,
     updateLightStatus,
     updateTemperature,
+    updateTemperatureRange,
     updateHeatMode
 } = require('../../lib/balboa/bwa');
 const { sleep, decrypt, encrypt, toCelsius, toFahrenheit } = require('../../lib/helpers');
@@ -70,7 +71,7 @@ module.exports = class device_BWA extends Homey.Device {
             this.homey.app.log(`[Device] - ${this.getName()} => setBwaClient Got config`, { ...this.config, username: 'LOG', password: 'LOG' });
 
             this._BwaClient = await loginAndGetToken(this.config.username, this.config.password);
-console.log(deviceObject.id);
+
             const components = await handleDeviceConfigurationRequest(deviceObject.id);
             
             if (Object.keys(components).length) {
@@ -100,7 +101,6 @@ console.log(deviceObject.id);
                 'action_pump_state.5',
                 'action_light_state',
                 'action_blower_state',
-                ,
                 'action_heater_mode',
                 'action_temp_range'
             ],
@@ -178,6 +178,10 @@ console.log(deviceObject.id);
 
             if ('action_heater_mode' in value) {
                 updateHeatMode(deviceObject.id, value.action_heater_mode);
+            }
+
+            if ('action_temp_range' in value) {
+                updateTemperatureRange(deviceObject.id, !!parseInt(value.action_temp_range));
             }
 
             await this.setCapabilityValues();

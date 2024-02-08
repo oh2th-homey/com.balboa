@@ -69,6 +69,6 @@
     "$extends": [
         "device",
         "pair",
-        "settings"
+        "settings_bwa"
     ]
 }

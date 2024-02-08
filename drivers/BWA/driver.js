@@ -21,9 +21,14 @@ module.exports = class driver_BWA extends Homey.Driver {
                 this._BwaClient = await loginAndGetToken(this.config.username, this.config.password);
                 
                 const deviceId = this._BwaClient.device && this._BwaClient.device.device_id;
-                this.balboaData = await handleDeviceConfigurationRequest(deviceId);
 
-                return true;
+                if(deviceId) {
+                    this.balboaData = await handleDeviceConfigurationRequest(deviceId);
+                    return true
+                }
+                
+
+                return false;
             } catch (error) {
                 console.log(error);
                 throw new Error(this.homey.__('pair.error'));
