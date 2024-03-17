@@ -163,5 +163,8 @@
   },
   "2.1.2": {
     "en": "FIX: BWA updateTemperatureRange"
+  },
+  "2.2.0": {
+    "en": "FIX: CMS login"
   }
 }
