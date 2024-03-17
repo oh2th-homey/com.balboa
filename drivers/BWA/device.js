@@ -182,6 +182,18 @@ module.exports = class device_BWA extends Homey.Device {
 
             if ('action_temp_range' in value) {
                 updateTemperatureRange(deviceObject.id, !!parseInt(value.action_temp_range));
+
+                if (!!parseInt(value.action_temp_range)) {
+                    this.setCapabilityOptions('target_temperature', {
+                        min: toCelsius(80),
+                        max: toCelsius(104)
+                    });
+                } else {
+                    this.setCapabilityOptions('target_temperature', {
+                        min: toCelsius(50),
+                        max: toCelsius(99)
+                    });
+                }
             }
 
             await this.setCapabilityValues();
@@ -289,6 +301,7 @@ module.exports = class device_BWA extends Homey.Device {
             await this.setValue('action_update_data', false, check);
             await this.setValue('action_light_state', light, check);
             await this.setValue('action_heater_mode', heaterReady, check);
+            await this.setValue('action_temp_range', heatingMode === 'high', check);
 
             await this.setValue('measure_heater_mode', heatMode.toUpperCase(), check);
             await this.setValue('measure_online', wifiState === 'WiFi OK', check);

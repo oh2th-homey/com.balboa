@@ -15,6 +15,7 @@
         "measure_heater_mode",
         "action_light_state",
         "action_heater_mode",
+        "action_temp_range",
         "action_update_data"
     ],
     "capabilitiesOptions": {
