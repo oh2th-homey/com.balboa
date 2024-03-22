@@ -166,5 +166,8 @@
   },
   "2.2.0": {
     "en": "FIX: CMS login"
+  },
+  "2.2.1": {
+    "en": "FIX: CMS temp check when not defined"
   }
 }
