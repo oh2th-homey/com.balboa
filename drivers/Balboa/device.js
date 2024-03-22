@@ -310,14 +310,15 @@ module.exports = class device_Balboa extends Homey.Device {
 
             if (currentTemp) await this.setValue('measure_temperature', toCelsius(currentTemp), check, 10, settings.round_temp);
 
-						// If desiredTemp is available, compare it to targetDesiredTemp. There should be 0.4 difference for valid value.
+            // If desiredTemp is available, compare it to targetDesiredTemp. There should be 0.4 difference for valid value.
             // Use also desiredTemp when targetDesiredTemp is at highRangeHigh or lowRangeLow, when tempRange was changed.
             // Fallback to targetDesiredTemp if desiredTemp is not available or update is delayed in the device API.
             // Values need to be Number for the strict comparison.
-						// 2023-12-19 CMS API introduced a bug in numeric values where the decimal separtor is a comma instead of a dot.
+            // 2023-12-19 CMS API introduced a bug in numeric values where the decimal separtor is a comma instead of a dot.
 
-						targetDesiredTemp = Number(targetDesiredTemp.toString().replace(',', '.'));
-						desiredTemp = Number(desiredTemp.toString().replace(',', '.'));
+            if(typeof targetDesiredTemp !== 'undefined') targetDesiredTemp = Number(targetDesiredTemp.toString().replace(',', '.'));
+            if(typeof desiredTemp !== 'undefined') desiredTemp = Number(desiredTemp.toString().replace(',', '.'));
+
             if (desiredTemp && (targetDesiredTemp === desiredTemp + 0.4 || targetDesiredTemp === setupParams.highRangeHigh || targetDesiredTemp == setupParams.lowRangeLow)) {
                 await this.setValue('target_temperature', toCelsius(desiredTemp), check, 10, settings.round_temp);
             } else {
