@@ -169,5 +169,8 @@
   },
   "2.2.1": {
     "en": "FIX: CMS temp check when not defined"
+  },
+  "2.2.2": {
+    "en": "FIX: patch ControlMySpa API"
   }
 }
