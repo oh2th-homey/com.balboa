@@ -175,5 +175,8 @@
   },
   "2.2.3": {
     "en": "FIX: patch ControlMySpa API"
+  },
+  "2.2.4": {
+    "en": "FIX: balboa CMS api"
   }
 }
