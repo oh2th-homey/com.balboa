@@ -178,5 +178,8 @@
   },
   "2.2.4": {
     "en": "FIX: balboa CMS api"
+  },
+  "2.2.5": {
+    "en": "FIX: typo in API client"
   }
 }
