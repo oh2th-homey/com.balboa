@@ -172,5 +172,8 @@
   },
   "2.2.2": {
     "en": "FIX: patch ControlMySpa API"
+  },
+  "2.2.3": {
+    "en": "FIX: patch ControlMySpa API"
   }
 }
