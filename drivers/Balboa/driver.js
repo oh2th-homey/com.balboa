@@ -9,18 +9,22 @@ module.exports = class driver_Balboa extends Homey.Driver {
     }
 
     async onPair(session) {
-        session.setHandler("login", async (data) => {
+        session.setHandler('login', async (data) => {
             try {
                 this.config = {
                     username: data.username,
                     password: data.password
                 };
 
-                this.homey.app.log(`[Driver] ${this.id} - got config`, {...this.config, username: "LOG", password: 'LOG'});
-    
+                this.homey.app.log(`[Driver] ${this.id} - got config`, { ...this.config, username: 'LOG', password: 'LOG' });
+
                 this._controlMySpaClient = await new ControlMySpa(this.config.username, this.config.password);
-                
+
                 this.balboaData = await this._controlMySpaClient.init();
+
+                if (!this.balboaData) {
+                    return false;
+                }
 
                 return true;
             } catch (error) {
@@ -29,15 +33,15 @@ module.exports = class driver_Balboa extends Homey.Driver {
             }
         });
 
-        session.setHandler("list_devices", async () => {
+        session.setHandler('list_devices', async () => {
             this.results = [];
             this.homey.app.log(`[Driver] ${this.id} - this.balboaData`, this.balboaData);
 
-            if(this.balboaData) {
+            if (this.balboaData) {
                 this.results.push({
                     name: this.balboaData.model,
                     data: {
-                        id: this.balboaData.oemId,
+                        id: this.balboaData._id
                     },
                     settings: {
                         ...this.config,
@@ -46,11 +50,10 @@ module.exports = class driver_Balboa extends Homey.Driver {
                     }
                 });
             }
-            
 
             this.homey.app.log(`[Driver] ${this.id} - Found devices - `, this.results);
 
             return this.results;
         });
     }
-}
+};
