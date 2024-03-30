@@ -181,5 +181,8 @@
   },
   "2.2.5": {
     "en": "FIX: typo in API client"
+  },
+  "2.2.6": {
+    "en": "FIX: Authentication refresh"
   }
 }
