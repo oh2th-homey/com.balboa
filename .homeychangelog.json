@@ -187,5 +187,8 @@
   },
   "2.2.7": {
     "en": "FIX: change manual update button to update now"
+  },
+  "2.2.8": {
+    "en": "FIX: change manual update to refresh data"
   }
 }
