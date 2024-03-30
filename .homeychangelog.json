@@ -184,5 +184,8 @@
   },
   "2.2.6": {
     "en": "FIX: Authentication refresh"
+  },
+  "2.2.7": {
+    "en": "FIX: change manual update button to update now"
   }
 }
