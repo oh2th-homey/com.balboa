@@ -190,5 +190,8 @@
   },
   "2.2.8": {
     "en": "FIX: change manual update to refresh data"
+  },
+  "2.2.9": {
+    "en": "FIX: authentication refresh"
   }
 }
