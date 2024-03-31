@@ -196,9 +196,11 @@ module.exports = class device_Balboa extends Homey.Device {
         try {
             this.homey.app.log(`[Device] ${this.getName()} - onCapability_UPDATE_DATA`, value);
 
-            this.setCapabilityValue('action_update_data', false);
-
             await this.setCapabilityValues();
+
+            await this.setCapabilityValue('action_update_data', false);
+
+            await sleep(2000);
 
             return Promise.resolve(true);
         } catch (e) {
