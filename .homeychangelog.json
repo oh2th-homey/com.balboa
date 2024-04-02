@@ -196,5 +196,8 @@
   },
   "2.2.10": {
     "en": "FIX: authentication refresh"
+  },
+  "2.2.11": {
+    "en": "FIX: manual update to refresh data card"
   }
 }
