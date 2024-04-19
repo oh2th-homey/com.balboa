@@ -199,5 +199,8 @@
   },
   "2.2.11": {
     "en": "FIX: manual update to refresh data card"
+  },
+  "2.2.12": {
+    "en": "NEW: add check before heater mode function to align with the flowcard"
   }
 }
