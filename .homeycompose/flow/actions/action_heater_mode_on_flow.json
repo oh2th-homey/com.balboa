@@ -1,11 +1,11 @@
 {
   "title": {
-    "en": "Toggle Heater to Ready",
-    "nl": "Schakel verwarming naar Beschikbaar"
+    "en": "Set Heater to Ready",
+    "nl": "zet verwarming naar Beschikbaar"
   },
   "titleFormatted": {
-    "en": "Toggle Heater to Ready",
-    "nl": "Schakel verwarming naar Beschikbaar"
+    "en": "Set Heater to Ready",
+    "nl": "Zet verwarming naar Beschikbaar"
   },
   "args": [
     {

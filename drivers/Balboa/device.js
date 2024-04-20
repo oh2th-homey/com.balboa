@@ -167,7 +167,9 @@ module.exports = class device_Balboa extends Homey.Device {
             }
 
             if ('action_heater_mode' in value) {
-                data = await this._controlMySpaClient.toggleHeaterMode();
+                if (value.action_heater_mode !== this.getCapabilityValue('measure_heater_mode')) {
+                    data = await this._controlMySpaClient.toggleHeaterMode();
+                }
             }
 
             if ('action_temp_range' in value) {
@@ -318,8 +320,8 @@ module.exports = class device_Balboa extends Homey.Device {
             // Values need to be Number for the strict comparison.
             // 2023-12-19 CMS API introduced a bug in numeric values where the decimal separtor is a comma instead of a dot.
 
-            if(typeof targetDesiredTemp !== 'undefined') targetDesiredTemp = Number(targetDesiredTemp.toString().replace(',', '.'));
-            if(typeof desiredTemp !== 'undefined') desiredTemp = Number(desiredTemp.toString().replace(',', '.'));
+            if (typeof targetDesiredTemp !== 'undefined') targetDesiredTemp = Number(targetDesiredTemp.toString().replace(',', '.'));
+            if (typeof desiredTemp !== 'undefined') desiredTemp = Number(desiredTemp.toString().replace(',', '.'));
 
             if (desiredTemp && (targetDesiredTemp === desiredTemp + 0.4 || targetDesiredTemp === setupParams.highRangeHigh || targetDesiredTemp == setupParams.lowRangeLow)) {
                 await this.setValue('target_temperature', toCelsius(desiredTemp), check, 10, settings.round_temp);

@@ -1,11 +1,11 @@
 {
   "title": {
-    "en": "Toggle Heater to Rest",
-    "nl": "Schakel verwarming naar Rust"
+    "en": "Set Heater to Rest",
+    "nl": "Zet verwarming naar Rust"
   },
   "titleFormatted": {
-    "en": "Toggle Heater to Rest",
-    "nl": "Schakel verwarming naar Rust"
+    "en": "Set Heater to Rest",
+    "nl": "Zet verwarming naar Rust"
   },
   "args": [
     {
