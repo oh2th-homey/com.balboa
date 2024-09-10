@@ -10,4 +10,5 @@
 - Synchronize the spa clock with Homey
 
 This project uses bwajs (https://github.com/martijnpoppen/com.balboa), which is licensed under the MIT License.
+
 This project uses controlmyspajs (https://gitlab.com/VVlasy/controlmyspajs), which is licensed under the MIT License.
