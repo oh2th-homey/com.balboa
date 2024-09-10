@@ -202,5 +202,8 @@
   },
   "2.2.12": {
     "en": "NEW: add check before heater mode function to align with the flowcard"
+  },
+  "2.2.13": {
+    "en": "NEW: add licensing"
   }
 }
