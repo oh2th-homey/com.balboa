@@ -179,7 +179,7 @@ module.exports = class device_Balboa extends Homey.Device {
                 if (value.filter === 0 && value.interval === 0) {
                     throw new Error('Filter 1 cannot be disabled');
                 }
-                data = await this._controlMySpaClient.setFilterCycleIntervalSchedule(value.filter, value.interval, value.startTime);
+                data = await this._controlMySpaClient.setFilterCycle(value.filter, value.interval, value.startTime);
             }
 
             if (data) {
