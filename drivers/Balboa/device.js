@@ -167,9 +167,8 @@ module.exports = class device_Balboa extends Homey.Device {
             }
 
             if ('action_heater_mode' in value) {
-                if (value.action_heater_mode !== this.getCapabilityValue('measure_heater_mode')) {
-                    data = await this._controlMySpaClient.toggleHeaterMode();
-                }
+                const valueString = value.action_heater_mode ? 'READY' : 'REST';
+                data = await this._controlMySpaClient.setHeaterMode(valueString);
             }
 
             if ('action_temp_range' in value) {
@@ -216,16 +215,17 @@ module.exports = class device_Balboa extends Homey.Device {
 
         try {
             const settings = this.getSettings();
-            let deviceInfo = deviceInfoOverride ? deviceInfoOverride : await this._controlMySpaClient.getSpa();
+            // let deviceInfo = deviceInfoOverride ? deviceInfoOverride : await this._controlMySpaClient.getSpa();
 
-            if (mockEnabled) {
-                deviceInfo = require('../lib/mock');
-            }
+            // if (mockEnabled) {
+            //    deviceInfo = require('../lib/mock');
+            //}
 
-            const { currentState } = deviceInfo;
-            let { desiredTemp, targetDesiredTemp, currentTemp, panelLock, heaterMode, components, runMode, online, tempRange, setupParams, hour, minute, timeNotSet, military } = currentState;
-
+            // const { currentState } = deviceInfo;
+            const currentState = await this._controlMySpaClient.getSpa();
             this.homey.app.log(`[Device] ${this.getName()} - deviceInfo =>`, currentState);
+
+            let { desiredTemp, targetDesiredTemp, currentTemp, panelLock, heaterMode, components, online, tempRange, setupParams, hour, minute, timeNotSet, military } = currentState;
 
             // Check for existence
             const pump0 = await this.getComponent('PUMP', components, '0');
@@ -252,7 +252,6 @@ module.exports = class device_Balboa extends Homey.Device {
             const tempRangeHigh = tempRange === 'HIGH';
             const tempRangeLow = tempRange === 'LOW';
             const heaterReady = heaterMode === 'READY';
-            const runModeReady = runMode === 'Ready'; // deprecated
 
             if (tempRangeHigh) {
                 this.setCapabilityOptions('target_temperature', {
@@ -310,7 +309,6 @@ module.exports = class device_Balboa extends Homey.Device {
             await this.setValue('measure_temperature_range', tempRange, check);
             await this.setValue('measure_heater_mode', heaterMode, check);
             await this.setValue('measure_online', online, check);
-            await this.setValue('measure_runmode', runModeReady, check);
 
             if (currentTemp) await this.setValue('measure_temperature', toCelsius(currentTemp), check, 10, settings.round_temp);
 

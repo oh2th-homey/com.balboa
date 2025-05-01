@@ -12,7 +12,6 @@
         "target_temperature",
         "measure_temperature",
         "measure_online",
-        "measure_runmode",
         "measure_temperature_range",
         "measure_heater",
         "measure_heater_mode",
