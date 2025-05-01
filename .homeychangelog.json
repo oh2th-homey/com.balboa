@@ -208,5 +208,8 @@
   },
   "2.3.0": {
     "en": "Update to the new ControlMySpa API and servers. Refactored CMS API Library"
+  },
+  "2.3.1": {
+    "en": "BWA driver improve error handling"
   }
 }
