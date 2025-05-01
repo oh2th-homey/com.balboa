@@ -24,10 +24,10 @@
       }
     },
     {
-        "id": "OFF",
+        "id": "READY_REST",
         "title": {
-          "en": "Off",
-          "nl": "Uit"
+          "en": "Ready in Rest",
+          "nl": "Ready in Rest"
         }
       }
   ]

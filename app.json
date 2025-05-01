@@ -2993,7 +2993,6 @@
         "target_temperature",
         "measure_temperature",
         "measure_online",
-        "measure_runmode",
         "measure_temperature_range",
         "measure_heater",
         "measure_heater_mode",
@@ -3209,10 +3208,10 @@
           }
         },
         {
-          "id": "OFF",
+          "id": "READY_REST",
           "title": {
-            "en": "Off",
-            "nl": "Uit"
+            "en": "Ready in Rest",
+            "nl": "Ready in Rest"
           }
         }
       ]
@@ -3261,18 +3260,6 @@
           }
         }
       ]
-    },
-    "measure_runmode": {
-      "type": "boolean",
-      "title": {
-        "en": "Runmode",
-        "nl": "Bedrijfsmodus"
-      },
-      "deprecated": true,
-      "getable": true,
-      "setable": false,
-      "uiComponent": null,
-      "icon": "assets/icons/lightning-charge.svg"
     },
     "measure_temperature_range": {
       "type": "enum",
