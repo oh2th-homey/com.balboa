@@ -1,9 +1,11 @@
 {
   "id": "com.balboa",
-  "version": "2.2.13",
+  "version": "2.3.0",
   "compatibility": ">=5.0.0",
   "sdk": 3,
-  "platforms": ["local"],
+  "platforms": [
+    "local"
+  ],
   "brandColor": "#000000",
   "name": {
     "en": "Balboa",
@@ -30,7 +32,9 @@
       "temperature"
     ]
   },
-  "category": ["appliances"],
+  "category": [
+    "appliances"
+  ],
   "images": {
     "large": "/assets/images/large.jpg",
     "small": "/assets/images/small.jpg"

@@ -205,5 +205,8 @@
   },
   "2.2.13": {
     "en": "NEW: add licensing"
+  },
+  "2.3.0": {
+    "en": "Update to the new ControlMySpa API and servers. Refactored CMS API Library"
   }
 }
