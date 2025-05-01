@@ -3,9 +3,7 @@
   "version": "2.2.13",
   "compatibility": ">=5.0.0",
   "sdk": 3,
-  "platforms": [
-    "local"
-  ],
+  "platforms": ["local"],
   "brandColor": "#000000",
   "name": {
     "en": "Balboa",
@@ -32,16 +30,14 @@
       "temperature"
     ]
   },
-  "category": [
-    "appliances"
-  ],
+  "category": ["appliances"],
   "images": {
     "large": "/assets/images/large.jpg",
     "small": "/assets/images/small.jpg"
   },
   "author": {
-    "name": "Martijn Poppen",
-    "email": "balboa@martijnpoppen.nl"
+    "name": "Tapio Heiskanen",
+    "email": "balboa@oh2th.fi"
   },
   "contributors": {
     "developers": [
@@ -50,7 +46,8 @@
         "email": "balboa@martijnpoppen.nl"
       },
       {
-        "name": "Tapio Heiskanen"
+        "name": "Tapio Heiskanen",
+        "email": "balboa@oh2th.fi"
       }
     ],
     "translators": [
@@ -65,17 +62,17 @@
   "contributing": {
     "donate": {
       "paypal": {
-        "username": "martijnpoppen"
+        "username": "oh2th"
       },
-      "bunq": {
-        "username": "martijnpoppen"
+      "githubSponsors": {
+        "username": "oh2th"
       }
     }
   },
   "bugs": {
-    "url": "https://community.homey.app/t/app-pro-controlmyspa/57870"
+    "url": "https://github.com/oh2th-homey/com.balboa/issues"
   },
-  "source": "https://github.com/martijnpoppen/com.balboa",
+  "source": "https://github.com/oh2th-homey/com.balboa",
   "homeyCommunityTopicId": 57870,
-  "support": "https://community.homey.app/t/app-pro-controlmyspa/57870"
+  "support": "https://community.homey.app/t//57870"
 }
