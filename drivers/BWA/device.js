@@ -73,7 +73,7 @@ module.exports = class device_BWA extends Homey.Device {
             this._BwaClient = await loginAndGetToken(this.config.username, this.config.password);
 
             const components = await handleDeviceConfigurationRequest(deviceObject.id);
-            
+
             if (Object.keys(components).length) {
                 await this.setCapabilityValues(null, true);
                 await this.setAvailable();
@@ -230,7 +230,7 @@ module.exports = class device_BWA extends Homey.Device {
             const settings = this.getSettings();
             let deviceInfo = deviceInfoOverride ? deviceInfoOverride : await handlePanelUpdateRequest(deviceObject.id);
 
-            const { actualTemperature, targetTemperature, pumpsState, lightsState, blowerState, heatingMode, heatMode, isHeating, wifiState } = deviceInfo;
+            const { actualTemperature, targetTemperature, pumpsState, lightsState, blowerState, temperatureRange, heatMode, isHeating, wifiState } = deviceInfo;
 
             this.homey.app.log(`[Device] ${this.getName()} - deviceInfo =>`, deviceInfo);
 
@@ -247,7 +247,7 @@ module.exports = class device_BWA extends Homey.Device {
                 if (pumps.Pump6.present) await this.addCapability('action_pump_state.5');
                 if (components.Blower.present) await this.addCapability('action_blower_state');
 
-                if (heatingMode === 'high') {
+                if (temperatureRange === 'high') {
                     this.setCapabilityOptions('target_temperature', {
                         min: toCelsius(80),
                         max: toCelsius(104)
@@ -303,7 +303,7 @@ module.exports = class device_BWA extends Homey.Device {
             await this.setValue('action_update_data', false, check);
             await this.setValue('action_light_state', light, check);
             await this.setValue('action_heater_mode', heaterReady, check);
-            await this.setValue('action_temp_range', heatingMode === 'high', check);
+            await this.setValue('action_temp_range', temperatureRange === 'high', check);
 
             await this.setValue('measure_heater_mode', heatMode.toUpperCase(), check);
             await this.setValue('measure_online', wifiState === 'WiFi OK', check);
