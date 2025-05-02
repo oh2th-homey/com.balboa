@@ -223,7 +223,7 @@ module.exports = class device_Balboa extends Homey.Device {
 
             // const { currentState } = deviceInfo;
             const currentState = await this._controlMySpaClient.getSpa();
-            this.homey.app.log(`[Device] ${this.getName()} - deviceInfo =>`, currentState);
+            this.homey.app.log(`[Device] ${this.getName()} - deviceInfo =>`, JSON.stringify(currentState, null, 2));
 
             let { desiredTemp, targetDesiredTemp, currentTemp, panelLock, heaterMode, components, online, tempRange, setupParams, hour, minute, timeNotSet, military } = currentState;
 
