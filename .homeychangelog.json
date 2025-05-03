@@ -217,5 +217,8 @@
   },
   "2.3.3": {
     "en": "Workaround for missing HEATER state in API when it is OFF."
+  },
+  "2.3.4": {
+    "en": "Updated to use the new ControlMySpa API. Refactored the CMS API library."
   }
 }
