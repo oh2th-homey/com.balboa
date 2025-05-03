@@ -214,5 +214,8 @@
   },
   "2.3.2": {
     "en": "FIX: setFilterCycle"
+  },
+  "2.3.3": {
+    "en": "Workaround for missing HEATER state in API when it is OFF."
   }
 }
