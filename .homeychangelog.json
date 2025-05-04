@@ -220,5 +220,8 @@
   },
   "2.3.4": {
     "en": "Updated to use the new ControlMySpa API. Refactored the CMS API library."
+  },
+  "2.3.5": {
+    "en": "NEW: Support multiple spas as per new API."
   }
 }
