@@ -6,7 +6,7 @@ const mockEnabled = false; // for debugging without API access
 module.exports = class device_Balboa extends Homey.Device {
     async onInit() {
         try {
-            this.homey.app.log('[Device] - init =>', this.getName());
+            this.homey.app.log('[Device] - onInit =>', this.getName());
             this.setUnavailable(`Connecting to ${this.getName()}`);
 
             await this.checkCapabilities();
@@ -15,7 +15,7 @@ module.exports = class device_Balboa extends Homey.Device {
 
             await this.setAvailable();
         } catch (error) {
-            this.homey.app.log(`[Device] ${this.getName()} - OnInit Error`, error);
+            this.homey.app.log(`[Device] ${this.getName()} - onInit Error`, error);
         }
     }
 

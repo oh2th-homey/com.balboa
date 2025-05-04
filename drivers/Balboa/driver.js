@@ -37,18 +37,22 @@ module.exports = class driver_Balboa extends Homey.Driver {
             this.results = [];
             this.homey.app.log(`[Driver] ${this.id} - this.balboaData`, this.balboaData);
 
-            if (this.balboaData) {
-                this.results.push({
-                    name: this.balboaData.model,
-                    data: {
-                        id: this.balboaData._id
-                    },
-                    settings: {
-                        ...this.config,
-                        username: this.config.username,
-                        password: encrypt(this.config.password)
-                    }
+            if (Array.isArray(this.balboaData)) {
+                this.balboaData.forEach((device) => {
+                    this.results.push({
+                        name: device.serialNumber, // Use the serialNumber from the object
+                        data: {
+                            id: device._id // Use the _id from the object
+                        },
+                        settings: {
+                            ...this.config,
+                            username: this.config.username,
+                            password: encrypt(this.config.password)
+                        }
+                    });
                 });
+            } else {
+                this.homey.app.log(`[Driver] ${this.id} - balboaData is not an array.`);
             }
 
             this.homey.app.log(`[Driver] ${this.id} - Found devices - `, this.results);
