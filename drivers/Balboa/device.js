@@ -374,7 +374,11 @@ module.exports = class device_Balboa extends Homey.Device {
                 await sleep(delay);
             }
 
-            await this.setCapabilityValue(key, newVal);
+            try {
+                await this.setCapabilityValue(key, newVal);
+            } catch (error) {
+                this.homey.app.error(`[Device] ${this.getName()} - setValue - error =>`, error);
+            }
 
             if (typeof newVal === 'boolean' && oldVal !== newVal && !firstRun) {
                 const triggers = this.homey.manifest.flow.triggers;
