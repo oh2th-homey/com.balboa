@@ -223,5 +223,8 @@
   },
   "2.3.5": {
     "en": "NEW: Support multiple spas as per new API."
+  },
+  "2.3.6": {
+    "en": "FIX: In some cases the spa's id is undefined. Use the stored device id in the API calls instead."
   }
 }
