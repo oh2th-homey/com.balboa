@@ -54,13 +54,14 @@ module.exports = class device_Balboa extends Homey.Device {
     // ------------- API -------------
     async setControlMySpaClient(overrideSettings = null) {
         const settings = overrideSettings ? overrideSettings : this.getSettings();
+        const deviceData = this.getData();
 
         try {
-            this.config = { ...settings, password: decrypt(settings.password) };
+            this.config = { ...settings, ...deviceData, password: decrypt(settings.password) };
 
             this.homey.app.log(`[Device] - ${this.getName()} => setControlMySpaClient Got config`, { ...this.config, username: 'LOG', password: 'LOG' });
 
-            this._controlMySpaClient = await new ControlMySpa(this.config.username, this.config.password);
+            this._controlMySpaClient = await new ControlMySpa(this.config.username, this.config.password, this.config.id);
 
             await this._controlMySpaClient.deviceInit();
 
@@ -215,13 +216,6 @@ module.exports = class device_Balboa extends Homey.Device {
 
         try {
             const settings = this.getSettings();
-            // let deviceInfo = deviceInfoOverride ? deviceInfoOverride : await this._controlMySpaClient.getSpa();
-
-            // if (mockEnabled) {
-            //    deviceInfo = require('../lib/mock');
-            //}
-
-            // const { currentState } = deviceInfo;
             const currentState = await this._controlMySpaClient.getSpa();
             this.homey.app.log(`[Device] ${this.getName()} - deviceInfo =>`, JSON.stringify(currentState, null, 2));
 
