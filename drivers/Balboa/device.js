@@ -248,12 +248,12 @@ module.exports = class device_Balboa extends Homey.Device {
             const heaterReady = heaterMode === 'READY';
 
             if (tempRangeHigh) {
-                this.setCapabilityOptions('target_temperature', {
+                await this.setCapabilityOptions('target_temperature', {
                     min: toCelsius(setupParams.highRangeLow),
                     max: toCelsius(setupParams.highRangeHigh)
                 });
             } else if (tempRangeLow) {
-                this.setCapabilityOptions('target_temperature', {
+                await this.setCapabilityOptions('target_temperature', {
                     min: toCelsius(setupParams.lowRangeLow),
                     max: toCelsius(setupParams.lowRangeHigh)
                 });
