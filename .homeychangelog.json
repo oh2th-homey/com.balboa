@@ -226,5 +226,8 @@
   },
   "2.3.6": {
     "en": "FIX: In some cases the spa's id is undefined. Use the stored device id in the API calls instead."
+  },
+  "2.3.7": {
+    "en": "FIX: unhandledRejection from setCapabilityOptions"
   }
 }
