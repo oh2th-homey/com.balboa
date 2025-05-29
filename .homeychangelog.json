@@ -229,5 +229,8 @@
   },
   "2.3.7": {
     "en": "FIX: unhandledRejection from setCapabilityOptions"
+  },
+  "2.3.8": {
+    "en": "FIX: ControlMySpa API endpoint has changed."
   }
 }
