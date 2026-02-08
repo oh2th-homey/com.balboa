@@ -4,7 +4,7 @@
   "main": "app.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/martijnpoppen/com.balboa"
+    "url": "https://github.com/oh2th-homey/com.balboa"
   },
   "dependencies": {
     "axios": "^0.21.1",
