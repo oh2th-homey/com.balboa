@@ -232,5 +232,8 @@
   },
   "2.3.8": {
     "en": "FIX: ControlMySpa API endpoint has changed."
+  },
+  "2.4.0": {
+    "en": "Deprecated measure_online in favor of alarm_connectivity. Bumps HomeyOS requirement to 12.2.0"
   }
 }
