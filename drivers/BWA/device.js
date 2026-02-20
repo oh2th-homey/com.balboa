@@ -306,7 +306,9 @@ module.exports = class device_BWA extends Homey.Device {
             await this.setValue('action_temp_range', temperatureRange === 'high', check);
 
             await this.setValue('measure_heater_mode', heatMode.toUpperCase(), check);
-            await this.setValue('measure_online', wifiState === 'WiFi OK', check);
+            const online = wifiState === 'WiFi OK';
+            await this.setValue('measure_online', online, check);
+            await this.setValue('alarm_connectivity', !online, check);
 
             await this.setValue('target_temperature', targetTemperature, check, 10, settings.round_temp);
 

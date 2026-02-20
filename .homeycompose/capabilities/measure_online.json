@@ -7,5 +7,6 @@
   "getable": true,
   "setable": false,
   "uiComponent": "sensor",
-  "icon": "assets/icons/wifi.svg"
+  "icon": "assets/icons/wifi.svg",
+  "deprecated": true
 }

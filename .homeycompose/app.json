@@ -1,7 +1,7 @@
 {
   "id": "com.balboa",
   "version": "2.3.8",
-  "compatibility": ">=5.0.0",
+  "compatibility": ">=12.2.0",
   "sdk": 3,
   "platforms": [
     "local"

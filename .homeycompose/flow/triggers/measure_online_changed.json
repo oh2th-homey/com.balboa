@@ -9,5 +9,6 @@
       "name": "device",
       "filter": "driver_id=Balboa|BWA"
     }
-  ]
+  ],
+  "deprecated": false
 }

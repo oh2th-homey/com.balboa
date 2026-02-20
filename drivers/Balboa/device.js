@@ -303,6 +303,7 @@ module.exports = class device_Balboa extends Homey.Device {
             await this.setValue('measure_temperature_range', tempRange, check);
             await this.setValue('measure_heater_mode', heaterMode, check);
             await this.setValue('measure_online', online, check);
+            await this.setValue('alarm_connectivity', !online, check);
 
             if (currentTemp) await this.setValue('measure_temperature', toCelsius(currentTemp), check, 10, settings.round_temp);
 

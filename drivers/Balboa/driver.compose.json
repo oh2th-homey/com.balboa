@@ -1,68 +1,65 @@
 {
-    "name": {
-        "en": "ControlMySpa",
-        "nl": "ControlMySpa"
+  "name": {
+    "en": "ControlMySpa",
+    "nl": "ControlMySpa"
+  },
+  "images": {
+    "large": "drivers/Balboa/assets/images/large.jpg",
+    "small": "drivers/Balboa/assets/images/small.jpg"
+  },
+  "capabilities": [
+    "alarm_connectivity",
+    "locked",
+    "target_temperature",
+    "measure_temperature",
+    "measure_online",
+    "measure_temperature_range",
+    "measure_heater",
+    "measure_heater_mode",
+    "measure_circulation_pump",
+    "measure_ozone",
+    "action_light_state",
+    "action_heater_mode",
+    "action_update_data",
+    "action_temp_range",
+    "action_set_filter_cycle"
+  ],
+  "capabilitiesOptions": {
+    "action_pump_state.1": {
+      "title": {
+        "en": "Pump State 2",
+        "nl": "Pomp Status 2"
+      }
     },
-    "images": {
-        "large": "drivers/Balboa/assets/images/large.jpg",
-        "small": "drivers/Balboa/assets/images/small.jpg"
+    "action_pump_state.2": {
+      "title": {
+        "en": "Pump State 3",
+        "nl": "Pomp Status 3"
+      }
     },
-    "capabilities": [
-        "locked",
-        "target_temperature",
-        "measure_temperature",
-        "measure_online",
-        "measure_temperature_range",
-        "measure_heater",
-        "measure_heater_mode",
-        "measure_circulation_pump",
-        "measure_ozone",
-        "action_light_state",
-        "action_heater_mode",
-        "action_update_data",
-        "action_temp_range",
-        "action_set_filter_cycle"
-    ],
-    "capabilitiesOptions": {
-        "action_pump_state.1": {
-            "title": {
-                "en": "Pump State 2",
-                "nl": "Pomp Status 2"
-            }
-        },
-        "action_pump_state.2": {
-            "title": {
-                "en": "Pump State 3",
-                "nl": "Pomp Status 3"
-            }
-        },
-        "action_blower_state.1": {
-            "title": {
-                "en": "Blower State 2",
-                "nl": "Blazer Status 2"
-            }
-        },
-        "action_blower_state.2": {
-            "title": {
-                "en": "Blower State 3",
-                "nl": "Blazer Status 3"
-            }
-        },
-        "target_temperature": {
-            "min": 26.5,
-            "max": 40,
-            "step": 0.5
-        },
-        "locked": {
-            "title": {
-                "nl": "Paneel slot",
-                "en": "Panel lock"
-            }
-        }
+    "action_blower_state.1": {
+      "title": {
+        "en": "Blower State 2",
+        "nl": "Blazer Status 2"
+      }
     },
-    "$extends": [
-        "device",
-        "pair",
-        "settings"
-    ]
+    "action_blower_state.2": {
+      "title": {
+        "en": "Blower State 3",
+        "nl": "Blazer Status 3"
+      }
+    },
+    "target_temperature": {
+      "min": 26.5,
+      "max": 40,
+      "step": 0.5
+    },
+    "locked": {
+      "title": {
+        "nl": "Paneel slot",
+        "en": "Panel lock"
+      }
+    }
+  },
+  "$extends": ["device", "pair", "settings"]
 }

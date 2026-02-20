@@ -1,75 +1,72 @@
 {
-    "name": {
-        "en": "Balboa BWA",
-        "nl": "Balboa BWA"
+  "name": {
+    "en": "Balboa BWA",
+    "nl": "Balboa BWA"
+  },
+  "images": {
+    "large": "drivers/BWA/assets/images/large.jpg",
+    "small": "drivers/BWA/assets/images/small.jpg"
+  },
+  "capabilities": [
+    "alarm_connectivity",
+    "target_temperature",
+    "measure_temperature",
+    "measure_online",
+    "measure_heater",
+    "measure_heater_mode",
+    "action_light_state",
+    "action_heater_mode",
+    "action_temp_range",
+    "action_update_data"
+  ],
+  "capabilitiesOptions": {
+    "action_pump_state.1": {
+      "title": {
+        "en": "Pump State 2",
+        "nl": "Pomp Status 2"
+      }
     },
-    "images": {
-        "large": "drivers/BWA/assets/images/large.jpg",
-        "small": "drivers/BWA/assets/images/small.jpg"
+    "action_pump_state.2": {
+      "title": {
+        "en": "Pump State 3",
+        "nl": "Pomp Status 3"
+      }
     },
-    "capabilities": [
-        "target_temperature",
-        "measure_temperature",
-        "measure_online",
-        "measure_heater",
-        "measure_heater_mode",
-        "action_light_state",
-        "action_heater_mode",
-        "action_temp_range",
-        "action_update_data"
-    ],
-    "capabilitiesOptions": {
-        "action_pump_state.1": {
-            "title": {
-                "en": "Pump State 2",
-                "nl": "Pomp Status 2"
-            }
-        },
-        "action_pump_state.2": {
-            "title": {
-                "en": "Pump State 3",
-                "nl": "Pomp Status 3"
-            }
-        },
-        "action_pump_state.3": {
-            "title": {
-                "en": "Pump State 4",
-                "nl": "Pomp Status 4"
-            }
-        },
-        "action_pump_state.4": {
-            "title": {
-                "en": "Pump State 5",
-                "nl": "Pomp Status 5"
-            }
-        },
-        "action_pump_state.5": {
-            "title": {
-                "en": "Pump State 6",
-                "nl": "Pomp Status 6"
-            }
-        },
-        "action_blower_state.1": {
-            "title": {
-                "en": "Blower State 2",
-                "nl": "Blazer Status 2"
-            }
-        },
-        "action_blower_state.2": {
-            "title": {
-                "en": "Blower State 3",
-                "nl": "Blazer Status 3"
-            }
-        },
-        "target_temperature": {
-            "min": 26.5,
-            "max": 40,
-            "step": 0.5
-        }
+    "action_pump_state.3": {
+      "title": {
+        "en": "Pump State 4",
+        "nl": "Pomp Status 4"
+      }
     },
-    "$extends": [
-        "device",
-        "pair",
-        "settings_bwa"
-    ]
+    "action_pump_state.4": {
+      "title": {
+        "en": "Pump State 5",
+        "nl": "Pomp Status 5"
+      }
+    },
+    "action_pump_state.5": {
+      "title": {
+        "en": "Pump State 6",
+        "nl": "Pomp Status 6"
+      }
+    },
+    "action_blower_state.1": {
+      "title": {
+        "en": "Blower State 2",
+        "nl": "Blazer Status 2"
+      }
+    },
+    "action_blower_state.2": {
+      "title": {
+        "en": "Blower State 3",
+        "nl": "Blazer Status 3"
+      }
+    },
+    "target_temperature": {
+      "min": 26.5,
+      "max": 40,
+      "step": 0.5
+    }
+  },
+  "$extends": ["device", "pair", "settings_bwa"]
 }
