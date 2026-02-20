@@ -10,5 +10,5 @@
       "filter": "driver_id=Balboa|BWA"
     }
   ],
-  "deprecated": false
+  "deprecated": true
 }
