@@ -235,5 +235,8 @@
   },
   "2.4.0": {
     "en": "Deprecated measure_online in favor of alarm_connectivity. Bumps HomeyOS requirement to 12.2.0"
+  },
+  "2.4.1": {
+    "en": "FIX: flow cards graying out every interval. Missing condition added setTargetTemperatureOptions as setCapabilityOptions is heavy."
   }
 }
