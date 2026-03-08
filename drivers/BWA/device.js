@@ -181,19 +181,10 @@ module.exports = class device_BWA extends Homey.Device {
             }
 
             if ('action_temp_range' in value) {
-                updateTemperatureRange(deviceObject.id, !!parseInt(value.action_temp_range));
+                const highRange = !!parseInt(value.action_temp_range);
 
-                if (!!parseInt(value.action_temp_range)) {
-                    this.setCapabilityOptions('target_temperature', {
-                        min: toCelsius(80),
-                        max: toCelsius(104)
-                    });
-                } else {
-                    this.setCapabilityOptions('target_temperature', {
-                        min: toCelsius(50),
-                        max: toCelsius(99)
-                    });
-                }
+                updateTemperatureRange(deviceObject.id, highRange);
+                await this.setTargetTemperatureOptions(highRange, 'onCapability_ACTION');
             }
 
             await this.setCapabilityValues();
@@ -247,17 +238,7 @@ module.exports = class device_BWA extends Homey.Device {
                 if (pumps.Pump6.present) await this.addCapability('action_pump_state.5');
                 if (components.Blower.present) await this.addCapability('action_blower_state');
 
-                if (temperatureRange === 'high') {
-                    this.setCapabilityOptions('target_temperature', {
-                        min: toCelsius(80),
-                        max: toCelsius(104)
-                    });
-                } else {
-                    this.setCapabilityOptions('target_temperature', {
-                        min: toCelsius(50),
-                        max: toCelsius(99)
-                    });
-                }
+                await this.setTargetTemperatureOptions(temperatureRange === 'high', 'setCapabilityValues:check');
             }
 
             // ------------ Get values --------------
@@ -357,6 +338,28 @@ module.exports = class device_BWA extends Homey.Device {
             } else if (oldVal !== newVal && !firstRun) {
                 this.homey.app.log(`[Device] ${this.getName()} - setValue ${newKey}_changed - Triggered: "${newKey} | ${newVal}"`);
             }
+        }
+    }
+
+    async setTargetTemperatureOptions(highRange, source = 'unknown') {
+        const nextOptions = highRange
+            ? {
+                min: toCelsius(80),
+                max: toCelsius(104)
+            }
+            : {
+                min: toCelsius(50),
+                max: toCelsius(99)
+            };
+
+        const currentOptions = this.getCapabilityOptions('target_temperature') || {};
+        const optionsChanged = currentOptions.min !== nextOptions.min || currentOptions.max !== nextOptions.max;
+
+        if (optionsChanged) {
+            this.homey.app.log(
+                `[Device] ${this.getName()} - setTargetTemperatureOptions (${source}) - changed to ${highRange ? 'HIGH' : 'LOW'} range`
+            );
+            await this.setCapabilityOptions('target_temperature', nextOptions);
         }
     }
 
