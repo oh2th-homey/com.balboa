@@ -238,5 +238,8 @@
   },
   "2.4.1": {
     "en": "FIX: flow cards graying out every interval. Missing condition added setTargetTemperatureOptions as setCapabilityOptions is heavy."
+  },
+  "2.5.0": {
+    "en": "Adds driver for Balboa Local Wifi"
   }
 }
