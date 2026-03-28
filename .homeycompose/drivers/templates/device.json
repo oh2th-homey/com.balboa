@@ -3,7 +3,7 @@
   "connectivity": ["cloud"],
   "platforms": ["local"],
   "images": {
-    "small": "{{driverAssetsPath}}/images/small.hpg",
+    "small": "{{driverAssetsPath}}/images/small.jpg",
     "large": "{{driverAssetsPath}}/images/large.jpg"
   }
 }
