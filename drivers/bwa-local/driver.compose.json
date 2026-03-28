@@ -3,61 +3,6 @@
     "en": "Balboa BWA Local",
     "nl": "Balboa BWA Lokaal"
   },
-  "pair": [
-    {
-      "id": "select_mode"
-    },
-    {
-      "id": "manual_ip"
-    },
-    {
-      "id": "list_devices",
-      "template": "list_devices",
-      "navigation": {
-        "prev": "select_mode",
-        "next": "add_devices"
-      }
-    },
-    {
-      "id": "add_devices",
-      "template": "add_devices"
-    }
-  ],
-  "settings": [
-    {
-      "type": "group",
-      "label": {
-        "en": "General settings",
-        "nl": "Algemene instellingen"
-      },
-      "children": [
-        {
-          "id": "update_interval",
-          "type": "number",
-          "label": {
-            "en": "Update interval",
-            "nl": "Update interval"
-          },
-          "min": 10,
-          "max": 3600,
-          "units": {
-            "en": "seconds",
-            "nl": "seconden"
-          },
-          "value": 600
-        },
-        {
-          "id": "round_temp",
-          "type": "checkbox",
-          "label": {
-            "en": "Round temperature",
-            "nl": "Temperatuur afronden"
-          },
-          "value": false
-        }
-      ]
-    }
-  ],
   "capabilities": [
     "alarm_connectivity",
     "target_temperature",
@@ -118,5 +63,60 @@
       "step": 0.5
     }
   },
+  "pair": [
+    {
+      "id": "select_mode"
+    },
+    {
+      "id": "manual_ip"
+    },
+    {
+      "id": "list_devices",
+      "template": "list_devices",
+      "navigation": {
+        "prev": "select_mode",
+        "next": "add_devices"
+      }
+    },
+    {
+      "id": "add_devices",
+      "template": "add_devices"
+    }
+  ],
+  "settings": [
+    {
+      "type": "group",
+      "label": {
+        "en": "General settings",
+        "nl": "Algemene instellingen"
+      },
+      "children": [
+        {
+          "id": "update_interval",
+          "type": "number",
+          "label": {
+            "en": "Update interval",
+            "nl": "Update interval"
+          },
+          "min": 10,
+          "max": 3600,
+          "units": {
+            "en": "seconds",
+            "nl": "seconden"
+          },
+          "value": 600
+        },
+        {
+          "id": "round_temp",
+          "type": "checkbox",
+          "label": {
+            "en": "Round temperature",
+            "nl": "Temperatuur afronden"
+          },
+          "value": false
+        }
+      ]
+    }
+  ],
   "$extends": ["device"]
 }
