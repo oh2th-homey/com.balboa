@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 8px;
+            background-color: #0084ff;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #006acc;
+        }
+
+        .description {
+            margin-bottom: 30px;
+            color: #666;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>BWA Connection</h1>
+        <p class="description">How would you like to connect to your Balboa BWA Spa?</p>
+
+        <button class="btn" onclick="selectMode('local')">
+            <b>Local Network (Recommended)</b><br>
+            <small>Direct connection - No Login required</small>
+        </button>
+
+        <button class="btn" style="background-color: #f0f0f0; color: #333;" onclick="Homey.showView('manual_ip')">
+            <b>Manual IP Entry</b><br>
+            <small>If discovery fails</small>
+        </button>
+
+        <button class="btn" style="background-color: #f0f0f0; color: #333;" onclick="selectMode('cloud')">
+            <b>BWA Cloud Account</b><br>
+            <small>Legacy login method</small>
+        </button>
+    </div>
+
+    <script>
+        function selectMode(mode) {
+            Homey.emit('select_mode', mode, function (err, result) {
+                if (err) return Homey.alert(err);
+                Homey.showView(mode === 'local' ? 'list_devices' : 'login_credentials');
+            });
+        }
+    </script>
+</body>
+
+</html>

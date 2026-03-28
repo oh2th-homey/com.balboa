@@ -1,0 +1,52 @@
+{
+  "pair": [
+    {
+      "id": "select_mode"
+    },
+    {
+      "id": "manual_ip"
+    },
+    {
+      "id": "login_credentials",
+      "template": "login_credentials",
+      "navigation": {
+        "prev": "select_mode"
+      },
+      "options": {
+        "usernameLabel": {
+          "en": "Username",
+          "nl": "Gebruikersnaam"
+        },
+        "usernamePlaceholder": {
+          "en": "example: johndoe",
+          "nl": "bijvoorbeeld: johndoe"
+        },
+        "usernameValue": {
+          "en": "johndoe",
+          "nl": "johndoe"
+        },
+        "passwordLabel": {
+          "en": "Password",
+          "nl": "Wachtwoord"
+        },
+        "passwordPlaceholder": {
+          "en": "Password",
+          "nl": "Wachtwoord"
+        },
+        "logo": "../../../assets/icons/controlmyspa.svg"
+      }
+    },
+    {
+      "id": "list_devices",
+      "template": "list_devices",
+      "navigation": {
+        "prev": "select_mode",
+        "next": "add_devices"
+      }
+    },
+    {
+      "id": "add_devices",
+      "template": "add_devices"
+    }
+  ]
+}
