@@ -3,10 +3,6 @@
     "en": "Balboa BWA",
     "nl": "Balboa BWA"
   },
-  "images": {
-    "large": "drivers/BWA/assets/images/large.jpg",
-    "small": "drivers/BWA/assets/images/small.jpg"
-  },
   "capabilities": [
     "alarm_connectivity",
     "target_temperature",

@@ -3,10 +3,6 @@
     "en": "ControlMySpa",
     "nl": "ControlMySpa"
   },
-  "images": {
-    "large": "drivers/Balboa/assets/images/large.jpg",
-    "small": "drivers/Balboa/assets/images/small.jpg"
-  },
   "capabilities": [
     "alarm_connectivity",
     "locked",

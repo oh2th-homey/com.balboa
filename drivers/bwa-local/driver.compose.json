@@ -1,17 +1,12 @@
 {
   "name": {
-    "en": "Balboa BWA",
-    "nl": "Balboa BWA"
-  },
-  "images": {
-    "large": "drivers/BWA/assets/images/large.jpg",
-    "small": "drivers/BWA/assets/images/small.jpg"
+    "en": "Balboa BWA Local",
+    "nl": "Balboa BWA Lokaal"
   },
   "capabilities": [
     "alarm_connectivity",
     "target_temperature",
     "measure_temperature",
-    "measure_online",
     "measure_heater",
     "measure_heater_mode",
     "action_light_state",

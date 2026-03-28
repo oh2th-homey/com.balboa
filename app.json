@@ -2663,6 +2663,11 @@
       "platforms": [
         "local"
       ],
+      "images": {
+        "small": "/drivers/BWA/assets/images/small.png",
+        "large": "/drivers/BWA/assets/images/large.png",
+        "xlarge": "/drivers/BWA/assets/images/xlarge.png"
+      },
       "pair": [
         {
           "id": "login_credentials",
@@ -2770,10 +2775,6 @@
         "en": "Balboa BWA",
         "nl": "Balboa BWA"
       },
-      "images": {
-        "large": "drivers/BWA/assets/images/large.jpg",
-        "small": "drivers/BWA/assets/images/small.jpg"
-      },
       "capabilities": [
         "alarm_connectivity",
         "target_temperature",
@@ -2845,6 +2846,11 @@
       "platforms": [
         "local"
       ],
+      "images": {
+        "small": "/drivers/Balboa/assets/images/small.png",
+        "large": "/drivers/Balboa/assets/images/large.png",
+        "xlarge": "/drivers/Balboa/assets/images/xlarge.png"
+      },
       "pair": [
         {
           "id": "login_credentials",
@@ -2987,10 +2993,6 @@
         "en": "ControlMySpa",
         "nl": "ControlMySpa"
       },
-      "images": {
-        "large": "drivers/Balboa/assets/images/large.jpg",
-        "small": "drivers/Balboa/assets/images/small.jpg"
-      },
       "capabilities": [
         "alarm_connectivity",
         "locked",
@@ -3046,6 +3048,197 @@
         }
       },
       "id": "Balboa"
+    },
+    {
+      "class": "other",
+      "connectivity": [
+        "cloud"
+      ],
+      "platforms": [
+        "local"
+      ],
+      "images": {
+        "small": "/drivers/bwa-local/assets/images/small.png",
+        "large": "/drivers/bwa-local/assets/images/large.png",
+        "xlarge": "/drivers/bwa-local/assets/images/xlarge.png"
+      },
+      "pair": [
+        {
+          "id": "select_mode"
+        },
+        {
+          "id": "manual_ip"
+        },
+        {
+          "id": "login_credentials",
+          "template": "login_credentials",
+          "navigation": {
+            "prev": "select_mode"
+          },
+          "options": {
+            "usernameLabel": {
+              "en": "Username",
+              "nl": "Gebruikersnaam"
+            },
+            "usernamePlaceholder": {
+              "en": "example: johndoe",
+              "nl": "bijvoorbeeld: johndoe"
+            },
+            "usernameValue": {
+              "en": "johndoe",
+              "nl": "johndoe"
+            },
+            "passwordLabel": {
+              "en": "Password",
+              "nl": "Wachtwoord"
+            },
+            "passwordPlaceholder": {
+              "en": "Password",
+              "nl": "Wachtwoord"
+            },
+            "logo": "../../../assets/icons/controlmyspa.svg"
+          }
+        },
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "navigation": {
+            "prev": "select_mode",
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ],
+      "settings": [
+        {
+          "type": "group",
+          "label": {
+            "en": "General settings",
+            "nl": "Algemene instellingen"
+          },
+          "children": [
+            {
+              "id": "update_interval",
+              "type": "number",
+              "label": {
+                "en": "Update interval",
+                "nl": "Update interval"
+              },
+              "min": 10,
+              "max": 3600,
+              "units": {
+                "en": "seconds",
+                "nl": "seconden"
+              },
+              "value": 600
+            },
+            {
+              "id": "round_temp",
+              "type": "checkbox",
+              "label": {
+                "en": "Round temperature",
+                "nl": "Temperatuur afronden"
+              },
+              "value": false
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "label": {
+            "en": "Login settings",
+            "nl": "Login instellingen"
+          },
+          "children": [
+            {
+              "id": "username",
+              "type": "text",
+              "label": {
+                "en": "Login",
+                "nl": "Login"
+              },
+              "value": ""
+            },
+            {
+              "id": "password",
+              "type": "password",
+              "label": {
+                "en": "Password",
+                "nl": "Wachtwoord"
+              },
+              "value": ""
+            }
+          ]
+        }
+      ],
+      "name": {
+        "en": "Balboa BWA Local",
+        "nl": "Balboa BWA Lokaal"
+      },
+      "capabilities": [
+        "alarm_connectivity",
+        "target_temperature",
+        "measure_temperature",
+        "measure_heater",
+        "measure_heater_mode",
+        "action_light_state",
+        "action_heater_mode",
+        "action_temp_range",
+        "action_update_data"
+      ],
+      "capabilitiesOptions": {
+        "action_pump_state.1": {
+          "title": {
+            "en": "Pump State 2",
+            "nl": "Pomp Status 2"
+          }
+        },
+        "action_pump_state.2": {
+          "title": {
+            "en": "Pump State 3",
+            "nl": "Pomp Status 3"
+          }
+        },
+        "action_pump_state.3": {
+          "title": {
+            "en": "Pump State 4",
+            "nl": "Pomp Status 4"
+          }
+        },
+        "action_pump_state.4": {
+          "title": {
+            "en": "Pump State 5",
+            "nl": "Pomp Status 5"
+          }
+        },
+        "action_pump_state.5": {
+          "title": {
+            "en": "Pump State 6",
+            "nl": "Pomp Status 6"
+          }
+        },
+        "action_blower_state.1": {
+          "title": {
+            "en": "Blower State 2",
+            "nl": "Blazer Status 2"
+          }
+        },
+        "action_blower_state.2": {
+          "title": {
+            "en": "Blower State 3",
+            "nl": "Blazer Status 3"
+          }
+        },
+        "target_temperature": {
+          "min": 10,
+          "max": 40,
+          "step": 0.5
+        }
+      },
+      "id": "bwa-local"
     }
   ],
   "capabilities": {
