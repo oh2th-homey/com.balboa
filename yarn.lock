@@ -2,6 +2,10 @@
 # yarn lockfile v1
 
 
+"@oh2th/bwa-local@github:oh2th/bwa-local":
+  version "0.9.1"
+  resolved "git+ssh://git@github.com/oh2th/bwa-local.git#5bf364b1c9c991ef27c6ef76e3a8ba2f95f6e43e"
+
 axios@^0.21.1:
   version "0.21.4"
   resolved "https://registry.npmjs.org/axios/-/axios-0.21.4.tgz"
@@ -10,9 +14,9 @@ axios@^0.21.1:
     follow-redirects "^1.14.0"
 
 follow-redirects@^1.14.0:
-  version "1.14.6"
-  resolved "https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.14.6.tgz"
-  integrity sha512-fhUl5EwSJbbl8AR+uYL2KQDxLkdSjZGR36xy46AO7cOMTrCMON6Sa28FmAnC2tRTDbd/Uuzz3aJBv7EBN7JH8A==
+  version "1.15.11"
+  resolved "https://registry.npmjs.org/follow-redirects/-/follow-redirects-1.15.11.tgz"
+  integrity sha512-deG2P0JfjrTxl50XGCDyfI97ZGVCxIpfKYmfyrQ54n5FO/0gfIES8C/Psl6kWVDolizcaaxZJnTS0QSMxvnsBQ==
 
 https@^1.0.0:
   version "1.0.0"

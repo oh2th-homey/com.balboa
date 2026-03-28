@@ -7,6 +7,7 @@
     "url": "https://github.com/oh2th-homey/com.balboa"
   },
   "dependencies": {
+    "@oh2th/bwa-local": "github:oh2th/bwa-local",
     "axios": "^0.21.1",
     "https": "^1.0.0"
   }
