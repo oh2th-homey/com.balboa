@@ -3062,42 +3062,16 @@
         "large": "/drivers/bwa-local/assets/images/large.png",
         "xlarge": "/drivers/bwa-local/assets/images/xlarge.png"
       },
+      "name": {
+        "en": "Balboa BWA Local",
+        "nl": "Balboa BWA Lokaal"
+      },
       "pair": [
         {
           "id": "select_mode"
         },
         {
           "id": "manual_ip"
-        },
-        {
-          "id": "login_credentials",
-          "template": "login_credentials",
-          "navigation": {
-            "prev": "select_mode"
-          },
-          "options": {
-            "usernameLabel": {
-              "en": "Username",
-              "nl": "Gebruikersnaam"
-            },
-            "usernamePlaceholder": {
-              "en": "example: johndoe",
-              "nl": "bijvoorbeeld: johndoe"
-            },
-            "usernameValue": {
-              "en": "johndoe",
-              "nl": "johndoe"
-            },
-            "passwordLabel": {
-              "en": "Password",
-              "nl": "Wachtwoord"
-            },
-            "passwordPlaceholder": {
-              "en": "Password",
-              "nl": "Wachtwoord"
-            },
-            "logo": "../../../assets/icons/controlmyspa.svg"
-          }
         },
         {
           "id": "list_devices",
@@ -3145,39 +3119,8 @@
               "value": false
             }
           ]
-        },
-        {
-          "type": "group",
-          "label": {
-            "en": "Login settings",
-            "nl": "Login instellingen"
-          },
-          "children": [
-            {
-              "id": "username",
-              "type": "text",
-              "label": {
-                "en": "Login",
-                "nl": "Login"
-              },
-              "value": ""
-            },
-            {
-              "id": "password",
-              "type": "password",
-              "label": {
-                "en": "Password",
-                "nl": "Wachtwoord"
-              },
-              "value": ""
-            }
-          ]
         }
       ],
-      "name": {
-        "en": "Balboa BWA Local",
-        "nl": "Balboa BWA Lokaal"
-      },
       "capabilities": [
         "alarm_connectivity",
         "target_temperature",

@@ -39,8 +39,8 @@
 
 <body>
     <div class="container">
-        <h1>BWA Connection</h1>
-        <p class="description">How would you like to connect to your Balboa BWA Spa?</p>
+        <h1>BWA Local Connection</h1>
+        <p class="description">Connect to your Balboa BWA spa on the local network.</p>
 
         <button class="btn" onclick="selectMode('local')">
             <b>Local Network (Recommended)</b><br>
@@ -51,18 +51,13 @@
             <b>Manual IP Entry</b><br>
             <small>If discovery fails</small>
         </button>
-
-        <button class="btn" style="background-color: #f0f0f0; color: #333;" onclick="selectMode('cloud')">
-            <b>BWA Cloud Account</b><br>
-            <small>Legacy login method</small>
-        </button>
     </div>
 
     <script>
         function selectMode(mode) {
             Homey.emit('select_mode', mode, function (err, result) {
                 if (err) return Homey.alert(err);
-                Homey.showView(mode === 'local' ? 'list_devices' : 'login_credentials');
+                Homey.showView('list_devices');
             });
         }
     </script>
