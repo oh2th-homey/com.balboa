@@ -241,5 +241,8 @@
   },
   "2.5.0": {
     "en": "Adds driver for Balboa Local Wifi"
+  },
+  "2.5.1": {
+    "en": "Deprecate measure_online flow cards"
   }
 }
