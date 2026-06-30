@@ -542,6 +542,7 @@
         "platforms": [
           "local"
         ],
+        "deprecated": true,
         "id": "condition_ONLINE"
       },
       {
