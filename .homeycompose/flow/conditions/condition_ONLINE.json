@@ -16,5 +16,6 @@
   ],
   "platforms": [
     "local"
-  ]
+  ],
+  "deprecated": true
 }
