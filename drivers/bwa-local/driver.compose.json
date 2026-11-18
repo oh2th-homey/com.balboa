@@ -3,6 +3,7 @@
     "en": "Balboa BWA Local",
     "nl": "Balboa BWA Lokaal"
   },
+  "connectivity": ["lan"],
   "capabilities": [
     "alarm_connectivity",
     "target_temperature",

@@ -3047,7 +3047,7 @@
     {
       "class": "other",
       "connectivity": [
-        "cloud"
+        "lan"
       ],
       "platforms": [
         "local"
