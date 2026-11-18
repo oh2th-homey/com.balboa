@@ -244,5 +244,8 @@
   },
   "2.5.1": {
     "en": "Deprecate measure_online flow cards"
+  },
+  "2.5.2": {
+    "en": "FIX: Set filter cycle can now disable and re-enable filter cycle 2, and Balboa BWA Local is listed as a local network device."
   }
 }
