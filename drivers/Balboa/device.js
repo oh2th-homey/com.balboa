@@ -177,10 +177,21 @@ module.exports = class device_Balboa extends Homey.Device {
       }
 
       if ('filter' in value && 'interval' in value) {
-        if (value.filter === 0 && value.interval === 0) {
-          throw new Error('Filter 1 cannot be disabled');
+        if (value.filter === 0) {
+          if (value.interval === 0) {
+            throw new Error('Filter 1 cannot be disabled');
+          }
+          data = await this._controlMySpaClient.setFilterCycle(0, value.interval, value.startTime);
+        } else if (value.interval === 0) {
+          // Disabling filter cycle 2 is its own command; a schedule with 0 intervals is not applied as disable (#16).
+          data = await this._controlMySpaClient.setFilter2State(false);
+        } else {
+          // The schedule does not enable filter cycle 2, so enable it after scheduling.
+          const scheduled = await this._controlMySpaClient.setFilterCycle(1, value.interval, value.startTime, { refresh: false });
+          if (scheduled) {
+            data = await this._controlMySpaClient.setFilter2State(true);
+          }
         }
-        data = await this._controlMySpaClient.setFilterCycle(value.filter, value.interval, value.startTime);
       }
 
       if (data) {
