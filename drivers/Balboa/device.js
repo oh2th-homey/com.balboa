@@ -105,7 +105,7 @@ module.exports = class device_Balboa extends Homey.Device {
 
       return Promise.resolve(true);
     } catch (e) {
-      this.homey.app.error(e);
+      this.homey.app.error(`[Device] ${this.getName()} - command failed: ${e.message}`);
       return Promise.reject(e);
     }
   }
@@ -122,7 +122,7 @@ module.exports = class device_Balboa extends Homey.Device {
 
       return Promise.resolve(true);
     } catch (e) {
-      this.homey.app.error(e);
+      this.homey.app.error(`[Device] ${this.getName()} - command failed: ${e.message}`);
       return Promise.reject(e);
     }
   }
@@ -187,11 +187,9 @@ module.exports = class device_Balboa extends Homey.Device {
           // Disabling filter cycle 2 is its own command; a schedule with 0 intervals is not applied as disable (#16).
           data = await this._controlMySpaClient.setFilter2State(false);
         } else {
-          // The schedule does not enable filter cycle 2, so enable it after scheduling.
-          const scheduled = await this._controlMySpaClient.setFilterCycle(1, value.interval, value.startTime, { refresh: false });
-          if (scheduled) {
-            data = await this._controlMySpaClient.setFilter2State(true);
-          }
+          // The schedule does not enable filter cycle 2, so enable it after scheduling; that also checks the schedule.
+          await this._controlMySpaClient.setFilterCycle(1, value.interval, value.startTime, { refresh: false });
+          data = await this._controlMySpaClient.setFilter2State(true, { numOfIntervals: value.interval, time: value.startTime });
         }
       }
 
@@ -201,7 +199,7 @@ module.exports = class device_Balboa extends Homey.Device {
 
       return Promise.resolve(true);
     } catch (e) {
-      this.homey.app.error(e);
+      this.homey.app.error(`[Device] ${this.getName()} - command failed: ${e.message}`);
       return Promise.reject(e);
     }
   }
@@ -228,19 +226,25 @@ module.exports = class device_Balboa extends Homey.Device {
 
     try {
       const settings = this.getSettings();
-      const currentState = await this._controlMySpaClient.getSpa();
-      this.homey.app.log(`[Device] ${this.getName()} - deviceInfo =>`, JSON.stringify(currentState, null, 2));
 
-      if (!currentState) {
+      let currentState;
+      try {
+        // After a command, use the state it read back.
+        currentState = deviceInfoOverride || (await this._controlMySpaClient.getSpa());
+      } catch (error) {
         if (this._controlMySpaClient.loginError) {
           await this.setLoginUnavailable();
+        } else {
+          // A passing API error or a rejected token: keep the last values, the next poll logs in again.
+          this.homey.app.error(`[Device] ${this.getName()} - ${error.message}`);
         }
-        // Otherwise a passing API error or a rejected token: keep the last values, the next poll logs in again.
         return;
       }
+      this.homey.app.log(`[Device] ${this.getName()} - deviceInfo =>`, JSON.stringify(currentState, null, 2));
 
       if (!this.getAvailable()) {
         this._unavailableMessage = null;
+        this.homey.app.log(`[Device] ${this.getName()} - available`);
         await this.setAvailable();
       }
 
@@ -358,7 +362,7 @@ module.exports = class device_Balboa extends Homey.Device {
         this.homey.app.log(`[Device] ${this.getName()} - setClock - clock sync disabled or clock is in sync.`);
       }
     } catch (error) {
-      this.homey.app.error(error);
+      this.homey.app.error(`[Device] ${this.getName()} - ${error.message}`);
     }
   }
 
