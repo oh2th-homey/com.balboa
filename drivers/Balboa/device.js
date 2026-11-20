@@ -1,27 +1,33 @@
 const Homey = require('homey');
 const ControlMySpa = require('../../lib/balboa/cms');
-const { sleep, decrypt, encrypt, toCelsius, toFahrenheit } = require('../../lib/helpers');
+const { sleep, decrypt, encrypt, toCelsius, toFahrenheit, formatCommand } = require('../../lib/helpers');
 const mockEnabled = false; // for debugging without API access
 
 module.exports = class device_Balboa extends Homey.Device {
+  // Homey prefixes device logs with the device ID: add the name to tell devices apart.
+  log(...args) {
+    super.log(`[${this.getName()}]`, ...args);
+  }
+
+  error(...args) {
+    super.error(`[${this.getName()}]`, ...args);
+  }
+
   async onInit() {
     try {
-      this.homey.app.log('[Device] - onInit =>', this.getName());
+      this.log('Device init');
       this.setUnavailable(`Connecting to ${this.getName()}`);
 
       await this.checkCapabilities();
       await this.setControlMySpaClient();
       await this.setCapabilityListeners();
     } catch (error) {
-      this.homey.app.log(`[Device] ${this.getName()} - onInit Error`, error);
+      this.error(`Init failed: ${error.message}`);
     }
   }
 
   // ------------- Settings -------------
   async onSettings({ oldSettings, newSettings, changedKeys }) {
-    this.homey.app.log(`[Device] ${this.getName()} - oldSettings`, { ...oldSettings, username: 'LOG', password: 'LOG' });
-    this.homey.app.log(`[Device] ${this.getName()} - newSettings`, { ...newSettings, username: 'LOG', password: 'LOG' });
-
     if (changedKeys.length) {
       if (this.onPollInterval) {
         this.clearIntervals();
@@ -40,8 +46,6 @@ module.exports = class device_Balboa extends Homey.Device {
   }
 
   async savePassword(settings, delay = 0) {
-    this.homey.app.log(`[Device] ${this.getName()} - savePassword - encrypted`);
-
     if (delay > 0) {
       await sleep(delay);
     }
@@ -57,8 +61,6 @@ module.exports = class device_Balboa extends Homey.Device {
     try {
       this.config = { ...settings, ...deviceData, password: decrypt(settings.password) };
 
-      this.homey.app.log(`[Device] - ${this.getName()} => setControlMySpaClient Got config`, { ...this.config, username: 'LOG', password: 'LOG' });
-
       this._controlMySpaClient = await new ControlMySpa(this.config.username, this.config.password, this.config.id);
 
       // setCapabilityValues() marks the device available, or unavailable when the login fails.
@@ -70,7 +72,7 @@ module.exports = class device_Balboa extends Homey.Device {
       // Keep polling while unavailable too, so the device recovers by itself after an outage.
       await this.setIntervalsAndFlows(settings);
     } catch (error) {
-      this.homey.app.log(`[Device] ${this.getName()} - setControlMySpaClient - error =>`, error);
+      this.error(`Connecting to ControlMySpa failed: ${error.message}`);
     }
   }
 
@@ -97,22 +99,22 @@ module.exports = class device_Balboa extends Homey.Device {
 
   async onCapability_TEMPERATURE(value) {
     try {
-      this.homey.app.log(`[Device] ${this.getName()} - onCapability_TEMPERATURE ${value}C ${toFahrenheit(value)}F`);
+      this.log(`Command: target_temperature ${value} °C (${toFahrenheit(value)} °F)`);
 
       // Send requested temperature to the spa in Fahrenheit + 0.4 degrees.
       // This is how the Balboa ControlMySpa mobile app does it.
-      const data = await this._controlMySpaClient.setTemp(toFahrenheit(value) + 0.4);
+      await this._controlMySpaClient.setTemp(toFahrenheit(value) + 0.4);
 
       return Promise.resolve(true);
     } catch (e) {
-      this.homey.app.error(`[Device] ${this.getName()} - command failed: ${e.message}`);
+      this.error(`Command failed: ${e.message}`);
       return Promise.reject(e);
     }
   }
 
   async onCapability_LOCKED(value) {
     try {
-      this.homey.app.log(`[Device] ${this.getName()} - onCapability_LOCKED`, value);
+      this.log(`Command: locked ${value}`);
 
       if (value) {
         await this._controlMySpaClient.lockPanel();
@@ -122,14 +124,14 @@ module.exports = class device_Balboa extends Homey.Device {
 
       return Promise.resolve(true);
     } catch (e) {
-      this.homey.app.error(`[Device] ${this.getName()} - command failed: ${e.message}`);
+      this.error(`Command failed: ${e.message}`);
       return Promise.reject(e);
     }
   }
 
   async onCapability_ACTION(value) {
     try {
-      this.homey.app.log(`[Device] ${this.getName()} - onCapability_ACTION`, value);
+      this.log(`Command: ${formatCommand(value)}`);
 
       let data = null;
 
@@ -199,14 +201,14 @@ module.exports = class device_Balboa extends Homey.Device {
 
       return Promise.resolve(true);
     } catch (e) {
-      this.homey.app.error(`[Device] ${this.getName()} - command failed: ${e.message}`);
+      this.error(`Command failed: ${e.message}`);
       return Promise.reject(e);
     }
   }
 
   async onCapability_UPDATE_DATA(value) {
     try {
-      this.homey.app.log(`[Device] ${this.getName()} - onCapability_UPDATE_DATA`, value);
+      this.log('Command: update data');
 
       await this.setCapabilityValues();
 
@@ -216,14 +218,12 @@ module.exports = class device_Balboa extends Homey.Device {
 
       return Promise.resolve(true);
     } catch (e) {
-      this.homey.app.error(e);
+      this.error(`Command failed: ${e.message}`);
       return Promise.reject(e);
     }
   }
 
   async setCapabilityValues(deviceInfoOverride = null, check = false) {
-    this.homey.app.log(`[Device] ${this.getName()} - setCapabilityValues`);
-
     try {
       const settings = this.getSettings();
 
@@ -236,17 +236,18 @@ module.exports = class device_Balboa extends Homey.Device {
           await this.setLoginUnavailable();
         } else {
           // A passing API error or a rejected token: keep the last values, the next poll logs in again.
-          this.homey.app.error(`[Device] ${this.getName()} - ${error.message}`);
+          this.error(`Updating spa data failed: ${error.message}`);
         }
         return;
       }
-      this.homey.app.log(`[Device] ${this.getName()} - deviceInfo =>`, JSON.stringify(currentState, null, 2));
 
       if (!this.getAvailable()) {
         this._unavailableMessage = null;
-        this.homey.app.log(`[Device] ${this.getName()} - available`);
+        this.log('Available again');
         await this.setAvailable();
       }
+
+      this._changes = [];
 
       let { desiredTemp, targetDesiredTemp, currentTemp, panelLock, heaterMode, components, online, tempRange, setupParams, hour, minute, timeNotSet, military } = currentState;
 
@@ -355,14 +356,14 @@ module.exports = class device_Balboa extends Homey.Device {
       const myTimeMinutes = Number(myTime.split(':')[0]) * 60 + Number(myTime.split(':')[1]);
       const spaTimeMinutes = hour * 60 + minute;
 
+      this.log(this._changes.length ? `${check ? 'Received' : 'Changed'}: ${this._changes.join(', ')}` : 'No changes');
+
       if (online && settings.clock_sync && (timeNotSet || military !== settings.clock_24 || Math.abs(spaTimeMinutes - myTimeMinutes) > 5)) {
-        this.homey.app.log(`[Device] ${this.getName()} - setClock ${myDate} ${myTime} ${myTZ} clock_24=${settings.clock_24}`);
+        this.log(`Setting spa clock to ${myDate} ${myTime} ${myTZ} (24 h: ${settings.clock_24})`);
         await this._controlMySpaClient.setTime(myDate, myTime, settings.clock_24);
-      } else {
-        this.homey.app.log(`[Device] ${this.getName()} - setClock - clock sync disabled or clock is in sync.`);
       }
     } catch (error) {
-      this.homey.app.error(`[Device] ${this.getName()} - ${error.message}`);
+      this.error(`Updating spa data failed: ${error.message}`);
     }
   }
 
@@ -397,9 +398,7 @@ module.exports = class device_Balboa extends Homey.Device {
     const optionsChanged = currentOptions.min !== nextOptions.min || currentOptions.max !== nextOptions.max;
 
     if (optionsChanged) {
-      this.homey.app.log(
-        `[Device] ${this.getName()} - setTargetTemperatureOptions (${source}) - changed to ${highRange ? 'HIGH' : 'LOW'} range`
-      );
+      this.log(`Target temperature range set to ${highRange ? 'HIGH' : 'LOW'} (${nextOptions.min}–${nextOptions.max} °C)`);
       await this.setCapabilityOptions('target_temperature', nextOptions);
     }
   }
@@ -410,8 +409,8 @@ module.exports = class device_Balboa extends Homey.Device {
       const oldVal = await this.getCapabilityValue(key);
       const newVal = roundNumber ? Math.round(value) : value;
 
-      if (oldVal !== newVal) {
-        this.homey.app.log(`[Device] ${this.getName()} - setValue - ${key}: ${oldVal} => ${newVal}`);
+      if (oldVal !== newVal && this._changes) {
+        this._changes.push(`${key} ${oldVal} → ${newVal}`);
       }
 
       if (delay) {
@@ -421,7 +420,7 @@ module.exports = class device_Balboa extends Homey.Device {
       try {
         await this.setCapabilityValue(key, newVal);
       } catch (error) {
-        this.homey.app.error(`[Device] ${this.getName()} - setValue - error =>`, error);
+        this.error(`Setting ${key} to ${newVal} failed: ${error.message}`);
       }
 
       if (typeof newVal === 'boolean' && oldVal !== newVal && !firstRun) {
@@ -432,11 +431,8 @@ module.exports = class device_Balboa extends Homey.Device {
           await this.homey.flow
             .getDeviceTriggerCard(`${newKey}_changed`)
             .trigger(this)
-            .catch(this.error)
-            .then(this.homey.app.log(`[Device] ${this.getName()} - setValue ${newKey}_changed - Triggered: "${newKey} | ${newVal}"`));
+            .catch((error) => this.error(`Trigger ${newKey}_changed failed: ${error.message}`));
         }
-      } else if (oldVal !== newVal && !firstRun) {
-        this.homey.app.log(`[Device] ${this.getName()} - setValue ${newKey}_changed - Triggered: "${newKey} | ${newVal}"`);
       }
     }
   }
@@ -446,7 +442,7 @@ module.exports = class device_Balboa extends Homey.Device {
     // Polls keep coming while the client waits to retry the login: only act on a change.
     if (!this.getAvailable() && this._unavailableMessage === message) return;
     this._unavailableMessage = message;
-    this.homey.app.log(`[Device] ${this.getName()} - unavailable: ${message}`);
+    this.error(`Unavailable: ${message}`);
     await this.setUnavailable(message);
   }
 
@@ -455,7 +451,7 @@ module.exports = class device_Balboa extends Homey.Device {
     try {
       await this.setCapabilityValuesInterval(settings.update_interval);
     } catch (error) {
-      this.homey.app.log(`[Device] ${this.getName()} - setIntervalsAndFlows Error`, error);
+      this.error(`Starting polling failed: ${error.message}`);
     }
   }
 
@@ -463,16 +459,15 @@ module.exports = class device_Balboa extends Homey.Device {
     try {
       const REFRESH_INTERVAL = 1000 * update_interval;
 
-      this.homey.app.log(`[Device] ${this.getName()} - onPollInterval =>`, REFRESH_INTERVAL, update_interval);
+      this.log(`Polling every ${update_interval} s`);
       this.onPollInterval = setInterval(this.setCapabilityValues.bind(this), REFRESH_INTERVAL);
     } catch (error) {
       this.setUnavailable(error);
-      this.homey.app.log(error);
+      this.error(`Starting polling failed: ${error.message}`);
     }
   }
 
   async clearIntervals() {
-    this.homey.app.log(`[Device] ${this.getName()} - clearIntervals`);
     await clearInterval(this.onPollInterval);
   }
 
@@ -483,9 +478,6 @@ module.exports = class device_Balboa extends Homey.Device {
 
     const deviceCapabilities = this.getCapabilities();
 
-    this.homey.app.log(`[Device] ${this.getName()} - Device capabilities =>`, deviceCapabilities);
-    this.homey.app.log(`[Device] ${this.getName()} - Driver capabilities =>`, driverCapabilities);
-
     await this.updateCapabilities(driverCapabilities, deviceCapabilities);
   }
 
@@ -494,21 +486,20 @@ module.exports = class device_Balboa extends Homey.Device {
       const newC = driverCapabilities.filter((d) => !deviceCapabilities.includes(d));
       const oldC = deviceCapabilities.filter((d) => !driverCapabilities.includes(d));
 
-      this.homey.app.log(`[Device] ${this.getName()} - Got old capabilities =>`, oldC);
-      this.homey.app.log(`[Device] ${this.getName()} - Got new capabilities =>`, newC);
+      if (oldC.length || newC.length) {
+        this.log(`Updating capabilities: removing [${oldC.join(', ')}], adding [${newC.join(', ')}]`);
+      }
 
       oldC.forEach((c) => {
-        this.homey.app.log(`[Device] ${this.getName()} - updateCapabilities => Remove `, c);
         this.removeCapability(c);
       });
       await sleep(2000);
       newC.forEach((c) => {
-        this.homey.app.log(`[Device] ${this.getName()} - updateCapabilities => Add `, c);
         this.addCapability(c);
       });
       await sleep(2000);
     } catch (error) {
-      this.homey.app.log(error);
+      this.error(`Updating capabilities failed: ${error.message}`);
     }
   }
 

@@ -1,11 +1,20 @@
 const Homey = require('homey');
-const { sleep } = require('../../lib/helpers');
+const { sleep, formatCommand } = require('../../lib/helpers');
 const BalboaLocal = require('../../lib/balboa/local');
 
 module.exports = class device_BWA extends Homey.Device {
+  // Homey prefixes device logs with the device ID: add the name to tell devices apart.
+  log(...args) {
+    super.log(`[${this.getName()}]`, ...args);
+  }
+
+  error(...args) {
+    super.error(`[${this.getName()}]`, ...args);
+  }
+
   async onInit() {
     try {
-      this.homey.app.log('[Device] - init =>', this.getName());
+      this.log('Device init');
       this._locks = {};
       this.setUnavailable(`Connecting to ${this.getName()}`);
 
@@ -15,15 +24,12 @@ module.exports = class device_BWA extends Homey.Device {
 
       await this.setAvailable();
     } catch (error) {
-      this.homey.app.log(`[Device] ${this.getName()} - OnInit Error`, error);
+      this.error(`Init failed: ${error.message}`);
     }
   }
 
   // ------------- Settings -------------
   async onSettings({ oldSettings, newSettings, changedKeys }) {
-    this.homey.app.log(`[Device] ${this.getName()} - oldSettings`, oldSettings);
-    this.homey.app.log(`[Device] ${this.getName()} - newSettings`, newSettings);
-
     if (changedKeys.length) {
       if (this.onPollInterval) {
         this.clearIntervals();
@@ -39,46 +45,48 @@ module.exports = class device_BWA extends Homey.Device {
 
     try {
       this.config = { ...settings };
-      this.homey.app.log(`[Device] - ${this.getName()} => setBwaClient Got config`, this.config);
-      this.homey.app.log(`[Device] - ${this.getName()} => Using LOCAL mode at ${this.config.ip}`);
       this._BwaClient = new BalboaLocal(this.config.ip);
 
       this._BwaClient.getSpa = async () => this._BwaClient.lastState;
 
       this._BwaClient.on('status', () => {
+        if (this._pollError) {
+          this._pollError = null;
+          this.log('Spa responding again');
+        }
         this.setCapabilityValues();
       });
 
-      this._BwaClient.on('config', (config) => {
-        this.homey.app.log(`[Device] ${this.getName()} - Received local config:`, config);
+      this._BwaClient.on('config', () => {
         this.setCapabilityValues(null, true);
       });
 
-      this._BwaClient.on('error', (err) => {
-        this.homey.app.error(`[Device] ${this.getName()} - Local Client Error:`, err);
-      });
-
-      this._BwaClient.on('commandFailed', (info) => {
-        this.homey.app.error(`[Device] ${this.getName()} - COMMAND FAILED: ${info.description}`);
-      });
-
-      this._BwaClient.on('ipChanged', async ({ oldIp, newIp }) => {
-        this.homey.app.log(`[Device] ${this.getName()} - Spa IP changed: ${oldIp} -> ${newIp}`);
-        try {
-          this.config.ip = newIp;
-          await this.setSettings({ ip: newIp });
-          this.homey.app.log(`[Device] ${this.getName()} - New IP saved to settings`);
-        } catch (err) {
-          this.homey.app.error(`[Device] ${this.getName()} - Failed to save new IP:`, err);
+      // A poll that has no caller failed. Log it once, not again on every poll while it lasts.
+      this._BwaClient.on('pollError', (err) => {
+        if (this._pollError !== err.message) {
+          this._pollError = err.message;
+          this.error(`Polling the spa failed: ${err.message}`);
         }
       });
 
+      this._BwaClient.on('ipChanged', async ({ oldIp, newIp }) => {
+        this.log(`Spa address changed from ${oldIp} to ${newIp}`);
+        try {
+          this.config.ip = newIp;
+          await this.setSettings({ ip: newIp });
+        } catch (err) {
+          this.error(`Saving the new spa address failed: ${err.message}`);
+        }
+      });
+
+      const pollIntervalMs = 300000;
       this._BwaClient.connect();
-      this._BwaClient.startPolling(300000);
+      this._BwaClient.startPolling(pollIntervalMs);
+      this.log(`Polling the spa at ${this.config.ip} every ${pollIntervalMs / 1000} s`);
       await this.setAvailable();
       await this.setIntervalsAndFlows(settings);
     } catch (error) {
-      this.homey.app.log(`[Device] ${this.getName()} - setBwaClient - error =>`, error);
+      this.error(`Connecting to the spa failed: ${error.message}`);
     }
   }
 
@@ -106,7 +114,7 @@ module.exports = class device_BWA extends Homey.Device {
 
   async onCapability_TEMPERATURE(value) {
     try {
-      this.homey.app.log(`[Device] ${this.getName()} - onCapability_TEMPERATURE ${value}C`);
+      this.log(`Command: target_temperature ${value} °C`);
 
       // Lock temperature for 10 seconds (local spas can be slow to update status)
       if (!this._locks) this._locks = {};
@@ -115,31 +123,31 @@ module.exports = class device_BWA extends Homey.Device {
         expiry: Date.now() + 10000
       };
 
-      await this._BwaClient.setTemp(value);
+      this.checkCommandResult(await this._BwaClient.setTemp(value));
 
       return Promise.resolve(true);
     } catch (e) {
-      this.homey.app.error(e);
+      this.error(`Command failed: ${e.message}`);
       return Promise.reject(e);
     }
   }
 
   async onCapability_LOCKED(value) {
     try {
-      this.homey.app.log(`[Device] ${this.getName()} - onCapability_LOCKED`, value);
+      this.log(`Command: locked ${value}`);
 
       await this._BwaClient.setPanelLock(value);
 
       return Promise.resolve(true);
     } catch (e) {
-      this.homey.app.error(e);
+      this.error(`Command failed: ${e.message}`);
       return Promise.reject(e);
     }
   }
 
   async onCapability_ACTION(value) {
     try {
-      this.homey.app.log(`[Device] ${this.getName()} - onCapability_ACTION`, value);
+      this.log(`Command: ${formatCommand(value)}`);
 
       // Lock capabilities for 5 seconds to prevent UI reverts from stale status packets
       if (!this._locks) this._locks = {};
@@ -150,22 +158,24 @@ module.exports = class device_BWA extends Homey.Device {
         };
       });
 
-      if ('action_blower_state' in value) await this._BwaClient.setBlowerState(0, value.action_blower_state);
-      if ('action_light_state' in value) await this._BwaClient.setLightState(0, value.action_light_state);
-      if ('action_pump_state' in value) await this._BwaClient.setJetState(0, value.action_pump_state);
-      if ('action_pump_state.1' in value) await this._BwaClient.setJetState(1, value['action_pump_state.1']);
-      if ('action_pump_state.2' in value) await this._BwaClient.setJetState(2, value['action_pump_state.2']);
-      if ('action_pump_state.3' in value) await this._BwaClient.setJetState(3, value['action_pump_state.3']);
-      if ('action_pump_state.4' in value) await this._BwaClient.setJetState(4, value['action_pump_state.4']);
-      if ('action_pump_state.5' in value) await this._BwaClient.setJetState(5, value['action_pump_state.5']);
-      if ('action_heater_mode' in value) await this._BwaClient.setHeaterMode(value.action_heater_mode ? 'READY' : 'REST');
+      const client = this._BwaClient;
+      const check = this.checkCommandResult.bind(this);
+      if ('action_blower_state' in value) check(await client.setBlowerState(0, value.action_blower_state));
+      if ('action_light_state' in value) check(await client.setLightState(0, value.action_light_state));
+      if ('action_pump_state' in value) check(await client.setJetState(0, value.action_pump_state));
+      if ('action_pump_state.1' in value) check(await client.setJetState(1, value['action_pump_state.1']));
+      if ('action_pump_state.2' in value) check(await client.setJetState(2, value['action_pump_state.2']));
+      if ('action_pump_state.3' in value) check(await client.setJetState(3, value['action_pump_state.3']));
+      if ('action_pump_state.4' in value) check(await client.setJetState(4, value['action_pump_state.4']));
+      if ('action_pump_state.5' in value) check(await client.setJetState(5, value['action_pump_state.5']));
+      if ('action_heater_mode' in value) check(await client.setHeaterMode(value.action_heater_mode ? 'READY' : 'REST'));
       if ('action_temp_range' in value) {
         const isHighRange = value.action_temp_range === true || value.action_temp_range === 'HIGH' || value.action_temp_range === 'high';
         const targetRange = isHighRange ? 'HIGH' : 'LOW';
 
         this._intendedRange = targetRange;
 
-        await this._BwaClient.setTempRange(isHighRange);
+        check(await client.setTempRange(isHighRange));
         await this._updateTargetTempLimits(targetRange);
       }
 
@@ -175,14 +185,14 @@ module.exports = class device_BWA extends Homey.Device {
 
       return Promise.resolve(true);
     } catch (e) {
-      this.homey.app.error(e);
+      this.error(`Command failed: ${e.message}`);
       return Promise.reject(e);
     }
   }
 
   async onCapability_UPDATE_DATA(value) {
     try {
-      this.homey.app.log(`[Device] ${this.getName()} - onCapability_UPDATE_DATA`, value);
+      this.log('Command: update data');
 
       // Actually fetch fresh state from the spa (not just re-render cached state)
       if (this._BwaClient && this._BwaClient.ensureState) {
@@ -197,14 +207,19 @@ module.exports = class device_BWA extends Homey.Device {
 
       return Promise.resolve(true);
     } catch (e) {
-      this.homey.app.error(e);
+      this.error(`Command failed: ${e.message}`);
       return Promise.reject(e);
     }
   }
 
-  async setCapabilityValues(deviceInfoOverride = null, check = false) {
-    // this.homey.app.log(`[Device] ${this.getName()} - setCapabilityValues`);
+  // A command the spa did not confirm does not fail the capability or flow card, but is logged.
+  checkCommandResult(result) {
+    if (result && !result.verified) {
+      this.error(`Command not confirmed by the spa: ${result.description}`);
+    }
+  }
 
+  async setCapabilityValues(deviceInfoOverride = null, check = false) {
     try {
       const settings = this.getSettings();
 
@@ -281,8 +296,7 @@ module.exports = class device_BWA extends Homey.Device {
       if (!deviceInfo) return;
 
       const { actualTemperature, targetTemperature, pumpsState, lightsState, blowerState, temperatureRange, heatMode, isHeating, wifiState } = deviceInfo;
-
-      // this.homey.app.log(`[Device] ${this.getName()} - deviceInfo =>`, deviceInfo);
+      this._changes = [];
 
       await this._updateTargetTempLimits();
 
@@ -343,14 +357,19 @@ module.exports = class device_BWA extends Homey.Device {
         // Only log once to avoid spamming the log on every poll.
         if (!this._sleepModeTempLogged) {
           this._sleepModeTempLogged = true;
-          this.homey.app.log(`[Device] ${this.getName()} - Temperature unavailable (spa in sleep mode), keeping last known value`);
+          this.log('Temperature unavailable (spa in sleep mode), keeping the last value');
         }
       } else {
         this._sleepModeTempLogged = false; // Reset flag when real temp is available again
         await this.setValue('measure_temperature', actualTemperature, check, 10, settings.round_temp);
       }
+
+      // The spa sends status often while connected: log only when something changed.
+      if (this._changes.length) {
+        this.log(`${check ? 'Received' : 'Changed'}: ${this._changes.join(', ')}`);
+      }
     } catch (error) {
-      this.homey.app.error(error);
+      this.error(`Updating capabilities failed: ${error.message}`);
     }
   }
 
@@ -362,7 +381,7 @@ module.exports = class device_BWA extends Homey.Device {
         if (Date.now() < lock.expiry) {
           const isDifferent = typeof lock.value === 'number' ? Math.abs(lock.value - value) > 0.1 : lock.value !== value;
           if (isDifferent) {
-            this.homey.app.log(`[Device] ${this.getName()} - Ignoring revert for ${key} (locked to ${lock.value}, got ${value})`);
+            // Ignore a stale status that would revert a value just set from Homey
             return;
           } else {
             // Value matches, we can unlock early
@@ -379,7 +398,9 @@ module.exports = class device_BWA extends Homey.Device {
 
       if (oldVal === newVal) return;
 
-      this.homey.app.log(`[Device] ${this.getName()} - setValue => ${key} => `, newVal, `(was ${oldVal})`);
+      if (this._changes) {
+        this._changes.push(`${key} ${oldVal} → ${newVal}`);
+      }
 
       if (delay) {
         await sleep(delay);
@@ -388,7 +409,7 @@ module.exports = class device_BWA extends Homey.Device {
       try {
         await this.setCapabilityValue(key, newVal);
       } catch (error) {
-        this.homey.app.error(`[Device] ${this.getName()} - setValue - error =>`, error);
+        this.error(`Setting ${key} to ${newVal} failed: ${error.message}`);
       }
 
       if (typeof newVal === 'boolean' && oldVal !== newVal && !firstRun) {
@@ -399,11 +420,8 @@ module.exports = class device_BWA extends Homey.Device {
           await this.homey.flow
             .getDeviceTriggerCard(`${newKey}_changed`)
             .trigger(this)
-            .catch(this.error)
-            .then(this.homey.app.log(`[Device] ${this.getName()} - setValue ${newKey}_changed - Triggered: "${newKey} | ${newVal}"`));
+            .catch((error) => this.error(`Trigger ${newKey}_changed failed: ${error.message}`));
         }
-      } else if (oldVal !== newVal && !firstRun) {
-        this.homey.app.log(`[Device] ${this.getName()} - setValue ${newKey}_changed - Triggered: "${newKey} | ${newVal}"`);
       }
     }
   }
@@ -415,7 +433,7 @@ module.exports = class device_BWA extends Homey.Device {
         await this.setCapabilityValuesInterval(settings.update_interval);
       }
     } catch (error) {
-      this.homey.app.log(`[Device] ${this.getName()} - OnInit Error`, error);
+      this.error(`Starting the update interval failed: ${error.message}`);
     }
   }
 
@@ -423,16 +441,14 @@ module.exports = class device_BWA extends Homey.Device {
     try {
       const REFRESH_INTERVAL = 1000 * update_interval;
 
-      this.homey.app.log(`[Device] ${this.getName()} - onPollInterval =>`, REFRESH_INTERVAL, update_interval);
       this.onPollInterval = setInterval(this.setCapabilityValues.bind(this), REFRESH_INTERVAL);
     } catch (error) {
       this.setUnavailable(error);
-      this.homey.app.log(error);
+      this.error(`Starting the update interval failed: ${error.message}`);
     }
   }
 
   async clearIntervals() {
-    this.homey.app.log(`[Device] ${this.getName()} - clearIntervals`);
     await clearInterval(this.onPollInterval);
   }
 
@@ -442,9 +458,6 @@ module.exports = class device_BWA extends Homey.Device {
     const driverCapabilities = driverManifest.capabilities;
 
     const deviceCapabilities = this.getCapabilities();
-
-    this.homey.app.log(`[Device] ${this.getName()} - Device capabilities =>`, deviceCapabilities);
-    this.homey.app.log(`[Device] ${this.getName()} - Driver capabilities =>`, driverCapabilities);
 
     await this.updateCapabilities(driverCapabilities, deviceCapabilities);
   }
@@ -465,21 +478,20 @@ module.exports = class device_BWA extends Homey.Device {
       ];
       const oldC = deviceCapabilities.filter((d) => !driverCapabilities.includes(d) && !dynamicCapabilities.includes(d));
 
-      this.homey.app.log(`[Device] ${this.getName()} - Got old capabilities =>`, oldC);
-      this.homey.app.log(`[Device] ${this.getName()} - Got new capabilities =>`, newC);
+      if (oldC.length || newC.length) {
+        this.log(`Updating capabilities: removing [${oldC.join(', ')}], adding [${newC.join(', ')}]`);
+      }
 
       oldC.forEach((c) => {
-        this.homey.app.log(`[Device] ${this.getName()} - updateCapabilities => Remove `, c);
         this.removeCapability(c);
       });
       await sleep(2000);
       newC.forEach((c) => {
-        this.homey.app.log(`[Device] ${this.getName()} - updateCapabilities => Add `, c);
         this.addCapability(c);
       });
       await sleep(2000);
     } catch (error) {
-      this.homey.app.log(error);
+      this.error(`Updating capabilities failed: ${error.message}`);
     }
   }
 
@@ -515,7 +527,7 @@ module.exports = class device_BWA extends Homey.Device {
       return;
     }
 
-    this.homey.app.log(`[Device] ${this.getName()} - Updating target_temperature limits: min=${min}, max=${max} (range=${tempRange})`);
+    this.log(`Target temperature range set to ${tempRange.toUpperCase()} (${min}–${max} °C)`);
 
     try {
       this._currentLimits = { min, max };
@@ -533,7 +545,7 @@ module.exports = class device_BWA extends Homey.Device {
         await this.setCapabilityValue('target_temperature', snappedTarget);
       }
     } catch (err) {
-      this.homey.app.error(`[Device] ${this.getName()} - Failed to update target_temperature options: ${err.message}`);
+      this.error(`Updating the target temperature range failed: ${err.message}`);
       this._currentLimits = null; // Reset on error
     }
   }

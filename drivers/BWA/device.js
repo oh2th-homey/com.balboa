@@ -10,12 +10,21 @@ const {
     updateTemperatureRange,
     updateHeatMode
 } = require('../../lib/balboa/bwa');
-const { sleep, decrypt, encrypt, toCelsius, toFahrenheit } = require('../../lib/helpers');
+const { sleep, decrypt, encrypt, toCelsius, formatCommand } = require('../../lib/helpers');
 
 module.exports = class device_BWA extends Homey.Device {
+    // Homey prefixes device logs with the device ID: add the name to tell devices apart.
+    log(...args) {
+        super.log(`[${this.getName()}]`, ...args);
+    }
+
+    error(...args) {
+        super.error(`[${this.getName()}]`, ...args);
+    }
+
     async onInit() {
         try {
-            this.homey.app.log('[Device] - init =>', this.getName());
+            this.log('Device init');
             this.setUnavailable(`Connecting to ${this.getName()}`);
 
             await this.checkCapabilities();
@@ -24,15 +33,12 @@ module.exports = class device_BWA extends Homey.Device {
 
             await this.setAvailable();
         } catch (error) {
-            this.homey.app.log(`[Device] ${this.getName()} - OnInit Error`, error);
+            this.error(`Init failed: ${error.message}`);
         }
     }
 
     // ------------- Settings -------------
     async onSettings({ oldSettings, newSettings, changedKeys }) {
-        this.homey.app.log(`[Device] ${this.getName()} - oldSettings`, { ...oldSettings, username: 'LOG', password: 'LOG' });
-        this.homey.app.log(`[Device] ${this.getName()} - newSettings`, { ...newSettings, username: 'LOG', password: 'LOG' });
-
         if (changedKeys.length) {
             if (this.onPollInterval) {
                 this.clearIntervals();
@@ -51,8 +57,6 @@ module.exports = class device_BWA extends Homey.Device {
     }
 
     async savePassword(settings, delay = 0) {
-        this.homey.app.log(`[Device] ${this.getName()} - savePassword - encrypted`);
-
         if (delay > 0) {
             await sleep(delay);
         }
@@ -68,8 +72,6 @@ module.exports = class device_BWA extends Homey.Device {
         try {
             this.config = { ...settings, password: decrypt(settings.password) };
 
-            this.homey.app.log(`[Device] - ${this.getName()} => setBwaClient Got config`, { ...this.config, username: 'LOG', password: 'LOG' });
-
             this._BwaClient = await loginAndGetToken(this.config.username, this.config.password);
 
             const components = await handleDeviceConfigurationRequest(deviceObject.id);
@@ -82,7 +84,7 @@ module.exports = class device_BWA extends Homey.Device {
                 this.setUnavailable(`Something went wrong with connecting to ${this.getName()}`);
             }
         } catch (error) {
-            this.homey.app.log(`[Device] ${this.getName()} - setBwaClient - error =>`, error);
+            this.error(`Connecting to the BWA cloud failed: ${error.message}`);
         }
     }
 
@@ -111,20 +113,20 @@ module.exports = class device_BWA extends Homey.Device {
     async onCapability_TEMPERATURE(value) {
         try {
             const deviceObject = this.getData();
-            this.homey.app.log(`[Device] ${this.getName()} - onCapability_TEMPERATURE ${value}C ${toFahrenheit(value)}F`);
+            this.log(`Command: target_temperature ${value} °C`);
 
             await updateTemperature(deviceObject.id, value);
 
             return Promise.resolve(true);
         } catch (e) {
-            this.homey.app.error(e);
+            this.error(`Command failed: ${e.message}`);
             return Promise.reject(e);
         }
     }
 
     async onCapability_LOCKED(value) {
         try {
-            this.homey.app.log(`[Device] ${this.getName()} - onCapability_LOCKED`, value);
+            this.log(`Command: locked ${value}`);
 
             if (value) {
                 await this._controlMySpaClient.lockPanel();
@@ -134,7 +136,7 @@ module.exports = class device_BWA extends Homey.Device {
 
             return Promise.resolve(true);
         } catch (e) {
-            this.homey.app.error(e);
+            this.error(`Command failed: ${e.message}`);
             return Promise.reject(e);
         }
     }
@@ -142,7 +144,7 @@ module.exports = class device_BWA extends Homey.Device {
     async onCapability_ACTION(value) {
         try {
             const deviceObject = this.getData();
-            this.homey.app.log(`[Device] ${this.getName()} - onCapability_ACTION`, value);
+            this.log(`Command: ${formatCommand(value)}`);
 
             if ('action_blower_state' in value) {
                 await updateBlowerStatus(deviceObject.id, value.action_blower_state);
@@ -177,13 +179,13 @@ module.exports = class device_BWA extends Homey.Device {
             }
 
             if ('action_heater_mode' in value) {
-                updateHeatMode(deviceObject.id, value.action_heater_mode);
+                await updateHeatMode(deviceObject.id, value.action_heater_mode);
             }
 
             if ('action_temp_range' in value) {
                 const highRange = !!parseInt(value.action_temp_range);
 
-                updateTemperatureRange(deviceObject.id, highRange);
+                await updateTemperatureRange(deviceObject.id, highRange);
                 await this.setTargetTemperatureOptions(highRange, 'onCapability_ACTION');
             }
 
@@ -191,14 +193,14 @@ module.exports = class device_BWA extends Homey.Device {
 
             return Promise.resolve(true);
         } catch (e) {
-            this.homey.app.error(e);
+            this.error(`Command failed: ${e.message}`);
             return Promise.reject(e);
         }
     }
 
     async onCapability_UPDATE_DATA(value) {
         try {
-            this.homey.app.log(`[Device] ${this.getName()} - onCapability_UPDATE_DATA`, value);
+            this.log('Command: update data');
 
             await this.setCapabilityValues();
 
@@ -208,22 +210,24 @@ module.exports = class device_BWA extends Homey.Device {
 
             return Promise.resolve(true);
         } catch (e) {
-            this.homey.app.error(e);
+            this.error(`Command failed: ${e.message}`);
             return Promise.reject(e);
         }
     }
 
     async setCapabilityValues(deviceInfoOverride = null, check = false) {
-        this.homey.app.log(`[Device] ${this.getName()} - setCapabilityValues`);
-
         try {
             const deviceObject = this.getData();
             const settings = this.getSettings();
             let deviceInfo = deviceInfoOverride ? deviceInfoOverride : await handlePanelUpdateRequest(deviceObject.id);
 
-            const { actualTemperature, targetTemperature, pumpsState, lightsState, blowerState, temperatureRange, heatMode, isHeating, wifiState } = deviceInfo;
+            if (this._pollError) {
+                this._pollError = null;
+                this.log('Spa data received again');
+            }
 
-            this.homey.app.log(`[Device] ${this.getName()} - deviceInfo =>`, deviceInfo);
+            const { actualTemperature, targetTemperature, pumpsState, lightsState, blowerState, temperatureRange, heatMode, isHeating, wifiState } = deviceInfo;
+            this._changes = [];
 
             if (check) {
                 const components = await handleDeviceConfigurationRequest(deviceObject.id);
@@ -298,20 +302,26 @@ module.exports = class device_BWA extends Homey.Device {
             } else {
                 await this.setValue('measure_temperature', actualTemperature, check, 10, settings.round_temp);
             }
+
+            this.log(this._changes.length ? `${check ? 'Received' : 'Changed'}: ${this._changes.join(', ')}` : 'No changes');
         } catch (error) {
-            this.homey.app.error(error);
+            // Log a failure once, not again on every poll while it lasts.
+            if (this._pollError !== error.message) {
+                this._pollError = error.message;
+                this.error(`Updating spa data failed: ${error.message}`);
+            }
         }
     }
 
     async setValue(key, value, firstRun = false, delay = 10, roundNumber = false) {
-        this.homey.app.log(`[Device] ${this.getName()} - setValue => ${key} => `, value);
-
         if (this.hasCapability(key)) {
             const newKey = key.replace('.', '_');
             const oldVal = await this.getCapabilityValue(key);
             const newVal = roundNumber ? Math.round(value) : value;
 
-            this.homey.app.log(`[Device] ${this.getName()} - setValue - oldValue => ${key} => `, oldVal, newVal);
+            if (oldVal !== newVal && this._changes) {
+                this._changes.push(`${key} ${oldVal} → ${newVal}`);
+            }
 
             if (delay) {
                 await sleep(delay);
@@ -321,7 +331,7 @@ module.exports = class device_BWA extends Homey.Device {
                 await this.setCapabilityValue(key, newVal);
             }
             catch (error) {
-                this.homey.app.error(`[Device] ${this.getName()} - setValue - error =>`, error);
+                this.error(`Setting ${key} to ${newVal} failed: ${error.message}`);
             }
 
             if (typeof newVal === 'boolean' && oldVal !== newVal && !firstRun) {
@@ -332,11 +342,8 @@ module.exports = class device_BWA extends Homey.Device {
                     await this.homey.flow
                         .getDeviceTriggerCard(`${newKey}_changed`)
                         .trigger(this)
-                        .catch(this.error)
-                        .then(this.homey.app.log(`[Device] ${this.getName()} - setValue ${newKey}_changed - Triggered: "${newKey} | ${newVal}"`));
+                        .catch((error) => this.error(`Trigger ${newKey}_changed failed: ${error.message}`));
                 }
-            } else if (oldVal !== newVal && !firstRun) {
-                this.homey.app.log(`[Device] ${this.getName()} - setValue ${newKey}_changed - Triggered: "${newKey} | ${newVal}"`);
             }
         }
     }
@@ -356,9 +363,7 @@ module.exports = class device_BWA extends Homey.Device {
         const optionsChanged = currentOptions.min !== nextOptions.min || currentOptions.max !== nextOptions.max;
 
         if (optionsChanged) {
-            this.homey.app.log(
-                `[Device] ${this.getName()} - setTargetTemperatureOptions (${source}) - changed to ${highRange ? 'HIGH' : 'LOW'} range`
-            );
+            this.log(`Target temperature range set to ${highRange ? 'HIGH' : 'LOW'} (${nextOptions.min}–${nextOptions.max} °C)`);
             await this.setCapabilityOptions('target_temperature', nextOptions);
         }
     }
@@ -370,7 +375,7 @@ module.exports = class device_BWA extends Homey.Device {
                 await this.setCapabilityValuesInterval(settings.update_interval);
             }
         } catch (error) {
-            this.homey.app.log(`[Device] ${this.getName()} - OnInit Error`, error);
+            this.error(`Starting polling failed: ${error.message}`);
         }
     }
 
@@ -378,16 +383,15 @@ module.exports = class device_BWA extends Homey.Device {
         try {
             const REFRESH_INTERVAL = 1000 * update_interval;
 
-            this.homey.app.log(`[Device] ${this.getName()} - onPollInterval =>`, REFRESH_INTERVAL, update_interval);
+            this.log(`Polling every ${update_interval} s`);
             this.onPollInterval = setInterval(this.setCapabilityValues.bind(this), REFRESH_INTERVAL);
         } catch (error) {
             this.setUnavailable(error);
-            this.homey.app.log(error);
+            this.error(`Starting polling failed: ${error.message}`);
         }
     }
 
     async clearIntervals() {
-        this.homey.app.log(`[Device] ${this.getName()} - clearIntervals`);
         await clearInterval(this.onPollInterval);
     }
 
@@ -398,9 +402,6 @@ module.exports = class device_BWA extends Homey.Device {
 
         const deviceCapabilities = this.getCapabilities();
 
-        this.homey.app.log(`[Device] ${this.getName()} - Device capabilities =>`, deviceCapabilities);
-        this.homey.app.log(`[Device] ${this.getName()} - Driver capabilities =>`, driverCapabilities);
-
         await this.updateCapabilities(driverCapabilities, deviceCapabilities);
     }
 
@@ -409,21 +410,20 @@ module.exports = class device_BWA extends Homey.Device {
             const newC = driverCapabilities.filter((d) => !deviceCapabilities.includes(d));
             const oldC = deviceCapabilities.filter((d) => !driverCapabilities.includes(d));
 
-            this.homey.app.log(`[Device] ${this.getName()} - Got old capabilities =>`, oldC);
-            this.homey.app.log(`[Device] ${this.getName()} - Got new capabilities =>`, newC);
+            if (oldC.length || newC.length) {
+                this.log(`Updating capabilities: removing [${oldC.join(', ')}], adding [${newC.join(', ')}]`);
+            }
 
             oldC.forEach((c) => {
-                this.homey.app.log(`[Device] ${this.getName()} - updateCapabilities => Remove `, c);
                 this.removeCapability(c);
             });
             await sleep(2000);
             newC.forEach((c) => {
-                this.homey.app.log(`[Device] ${this.getName()} - updateCapabilities => Add `, c);
                 this.addCapability(c);
             });
             await sleep(2000);
         } catch (error) {
-            this.homey.app.log(error);
+            this.error(`Updating capabilities failed: ${error.message}`);
         }
     }
 

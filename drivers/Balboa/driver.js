@@ -4,8 +4,7 @@ const { encrypt } = require('../../lib/helpers');
 
 module.exports = class driver_Balboa extends Homey.Driver {
     onInit() {
-        this.homey.app.log('[Driver] - init', this.id);
-        this.homey.app.log(`[Driver] - version`, Homey.manifest.version);
+        this.log('Driver init');
     }
 
     async onPair(session) {
@@ -15,8 +14,6 @@ module.exports = class driver_Balboa extends Homey.Driver {
                     username: data.username,
                     password: data.password
                 };
-
-                this.homey.app.log(`[Driver] ${this.id} - got config`, { ...this.config, username: 'LOG', password: 'LOG' });
 
                 this._controlMySpaClient = await new ControlMySpa(this.config.username, this.config.password);
 
@@ -28,14 +25,13 @@ module.exports = class driver_Balboa extends Homey.Driver {
 
                 return true;
             } catch (error) {
-                console.log(error);
+                this.error(`Pairing login failed: ${error.message}`);
                 throw new Error(this.homey.__('pair.error'));
             }
         });
 
         session.setHandler('list_devices', async () => {
             this.results = [];
-            this.homey.app.log(`[Driver] ${this.id} - this.balboaData`, this.balboaData);
 
             if (Array.isArray(this.balboaData)) {
                 this.balboaData.forEach((device) => {
@@ -51,11 +47,9 @@ module.exports = class driver_Balboa extends Homey.Driver {
                         }
                     });
                 });
-            } else {
-                this.homey.app.log(`[Driver] ${this.id} - balboaData is not an array.`);
             }
 
-            this.homey.app.log(`[Driver] ${this.id} - Found devices - `, this.results);
+            this.log(`Pairing found ${this.results.length} device(s)`);
 
             return this.results;
         });
