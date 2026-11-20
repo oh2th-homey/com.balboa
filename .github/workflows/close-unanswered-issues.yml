@@ -1,0 +1,32 @@
+name: Close unanswered issues
+
+# Issues labelled 'waiting for feedback' get a reminder after 7 days without activity
+# and are closed 3 days later if there is still no reply. Any comment resets the timer.
+on:
+  schedule:
+    - cron: '30 6 * * *'
+  workflow_dispatch:
+
+permissions:
+  issues: write
+
+jobs:
+  close-unanswered:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v11
+        with:
+          only-labels: 'waiting for feedback'
+          days-before-stale: 7
+          days-before-close: 3
+          days-before-pr-stale: -1
+          days-before-pr-close: -1
+          stale-issue-label: 'closing soon'
+          remove-stale-when-updated: true
+          close-issue-reason: not_planned
+          stale-issue-message: >-
+            There has been no reply for 7 days, so this issue will be closed automatically in 3 days.
+            If you still need help, please add a comment with the requested information and it will stay open.
+          close-issue-message: >-
+            Closing because there was no reply. If the problem still happens on the latest version,
+            please comment here or open a new issue and we'll take another look.

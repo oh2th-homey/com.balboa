@@ -1,0 +1,56 @@
+name: Issue feedback labels
+
+# 'waiting for feedback' -> 'reply received' when someone other than a maintainer comments.
+# 'reply received' is cleared when a maintainer acts on the issue: comments, adds
+# 'waiting for feedback' again or closes it. Closing also clears 'waiting for feedback'.
+on:
+  issue_comment:
+    types: [created]
+  issues:
+    types: [labeled, closed]
+
+permissions:
+  issues: write
+
+jobs:
+  reply-received:
+    if: >-
+      github.event_name == 'issue_comment' &&
+      !github.event.issue.pull_request &&
+      contains(github.event.issue.labels.*.name, 'waiting for feedback') &&
+      !contains(fromJSON('["OWNER", "MEMBER", "COLLABORATOR"]'), github.event.comment.author_association) &&
+      github.event.comment.user.type != 'Bot'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Swap labels
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: >-
+          gh issue edit ${{ github.event.issue.number }} --repo ${{ github.repository }}
+          --remove-label "waiting for feedback" --add-label "reply received"
+
+  maintainer-action:
+    if: >-
+      !github.event.issue.pull_request && (
+        (github.event_name == 'issue_comment' &&
+          contains(fromJSON('["OWNER", "MEMBER", "COLLABORATOR"]'), github.event.comment.author_association) &&
+          contains(github.event.issue.labels.*.name, 'reply received')) ||
+        (github.event_name == 'issues' && github.event.action == 'labeled' &&
+          github.event.label.name == 'waiting for feedback' &&
+          contains(github.event.issue.labels.*.name, 'reply received')) ||
+        (github.event_name == 'issues' && github.event.action == 'closed' &&
+          (contains(github.event.issue.labels.*.name, 'reply received') ||
+           contains(github.event.issue.labels.*.name, 'waiting for feedback')))
+      )
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clear feedback labels
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CLOSED: ${{ github.event.action == 'closed' }}
+        run: |
+          args=(--remove-label "reply received")
+          if [ "$CLOSED" = "true" ]; then
+            args+=(--remove-label "waiting for feedback")
+          fi
+          gh issue edit ${{ github.event.issue.number }} --repo ${{ github.repository }} "${args[@]}"

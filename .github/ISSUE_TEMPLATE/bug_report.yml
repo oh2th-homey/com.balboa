@@ -1,0 +1,45 @@
+name: Bug report
+description: Something doesn't work as expected.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting. Please don't include passwords, email addresses or other personal details.
+  - type: dropdown
+    id: driver
+    attributes:
+      label: Device type
+      description: Which device type did you add in Homey?
+      options:
+        - Balboa BWA Local (home network)
+        - Balboa BWA (cloud)
+        - ControlMySpa (cloud)
+        - Not sure
+    validations:
+      required: true
+  - type: input
+    id: app-version
+    attributes:
+      label: App version
+      description: Homey app → More → Apps → Balboa.
+      placeholder: e.g. 2.5.3
+    validations:
+      required: true
+  - type: input
+    id: homey-version
+    attributes:
+      label: Homey model and version
+      placeholder: e.g. Homey Pro (Early 2023), 12.4.0
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you do, what did you expect, and what happened instead?
+    validations:
+      required: true
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Diagnostic report
+      description: If you sent a diagnostic report from Homey (Apps → Balboa → Send diagnostic report), paste its ID here.
