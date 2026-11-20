@@ -250,5 +250,8 @@
   },
   "2.5.3": {
     "en": "FIX: ControlMySpa connections are verified, and a failed login now marks the spa unavailable with a clear message instead of showing wrong values."
+  },
+  "2.5.4": {
+    "en": "FIX: ControlMySpa flow cards now fail when the spa did not apply the change, so flows can react to it."
   }
 }
