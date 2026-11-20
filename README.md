@@ -9,6 +9,6 @@
 - Control Jets, Blowers and Lights
 - Synchronize the spa clock with Homey
 
-This project uses bwajs (<https://github.com/oh2th-homey/com.balboa>), which is licensed under the MIT License.
+Originally developed by Martijn Poppen, who transferred the app to Tapio Heiskanen.
 
 This project uses controlmyspajs (<https://gitlab.com/VVlasy/controlmyspajs>), which is licensed under the MIT License.
