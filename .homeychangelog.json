@@ -247,5 +247,8 @@
   },
   "2.5.2": {
     "en": "FIX: Set filter cycle can now disable and re-enable filter cycle 2, and Balboa BWA Local is listed as a local network device."
+  },
+  "2.5.3": {
+    "en": "FIX: ControlMySpa connections are verified, and a failed login now marks the spa unavailable with a clear message instead of showing wrong values."
   }
 }
