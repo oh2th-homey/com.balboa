@@ -12,8 +12,6 @@ module.exports = class device_Balboa extends Homey.Device {
       await this.checkCapabilities();
       await this.setControlMySpaClient();
       await this.setCapabilityListeners();
-
-      await this.setAvailable();
     } catch (error) {
       this.homey.app.log(`[Device] ${this.getName()} - onInit Error`, error);
     }
@@ -63,10 +61,13 @@ module.exports = class device_Balboa extends Homey.Device {
 
       this._controlMySpaClient = await new ControlMySpa(this.config.username, this.config.password, this.config.id);
 
-      await this._controlMySpaClient.deviceInit();
-
-      await this.setCapabilityValues(null, true);
-      await this.setAvailable();
+      // setCapabilityValues() marks the device available, or unavailable when the login fails.
+      if (await this._controlMySpaClient.deviceInit()) {
+        await this.setCapabilityValues(null, true);
+      } else {
+        await this.setLoginUnavailable();
+      }
+      // Keep polling while unavailable too, so the device recovers by itself after an outage.
       await this.setIntervalsAndFlows(settings);
     } catch (error) {
       this.homey.app.log(`[Device] ${this.getName()} - setControlMySpaClient - error =>`, error);
@@ -229,6 +230,19 @@ module.exports = class device_Balboa extends Homey.Device {
       const settings = this.getSettings();
       const currentState = await this._controlMySpaClient.getSpa();
       this.homey.app.log(`[Device] ${this.getName()} - deviceInfo =>`, JSON.stringify(currentState, null, 2));
+
+      if (!currentState) {
+        if (this._controlMySpaClient.loginError) {
+          await this.setLoginUnavailable();
+        }
+        // Otherwise a passing API error or a rejected token: keep the last values, the next poll logs in again.
+        return;
+      }
+
+      if (!this.getAvailable()) {
+        this._unavailableMessage = null;
+        await this.setAvailable();
+      }
 
       let { desiredTemp, targetDesiredTemp, currentTemp, panelLock, heaterMode, components, online, tempRange, setupParams, hour, minute, timeNotSet, military } = currentState;
 
@@ -423,12 +437,19 @@ module.exports = class device_Balboa extends Homey.Device {
     }
   }
 
+  async setLoginUnavailable() {
+    const message = this._controlMySpaClient?.credentialsRejected ? this.homey.__('device.login_rejected') : this.homey.__('device.login_failed');
+    // Polls keep coming while the client waits to retry the login: only act on a change.
+    if (!this.getAvailable() && this._unavailableMessage === message) return;
+    this._unavailableMessage = message;
+    this.homey.app.log(`[Device] ${this.getName()} - unavailable: ${message}`);
+    await this.setUnavailable(message);
+  }
+
   // ------------- Intervals -------------
   async setIntervalsAndFlows(settings) {
     try {
-      if (this.getAvailable()) {
-        await this.setCapabilityValuesInterval(settings.update_interval);
-      }
+      await this.setCapabilityValuesInterval(settings.update_interval);
     } catch (error) {
       this.homey.app.log(`[Device] ${this.getName()} - setIntervalsAndFlows Error`, error);
     }

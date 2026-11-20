@@ -7,6 +7,10 @@
     "error": "Er is iets mis gegaan. Controleer je login",
     "error_empty": "Geen Spa gevonden."
   },
+  "device": {
+    "login_rejected": "ControlMySpa heeft de login geweigerd. Controleer het e-mailadres en wachtwoord in de apparaatinstellingen.",
+    "login_failed": "Geen verbinding met ControlMySpa. Later wordt het opnieuw geprobeerd."
+  },
   "helpers": {
     "days": "d",
     "hours": "u",

@@ -7,6 +7,10 @@
     "error": "Something went wrong. Check your login.",
     "error_empty": "No Spa found."
   },
+  "device": {
+    "login_rejected": "ControlMySpa rejected the login. Check the email and password in the device settings.",
+    "login_failed": "Can't connect to ControlMySpa. Trying again later."
+  },
   "helpers": {
     "days": "d",
     "hours": "h",
